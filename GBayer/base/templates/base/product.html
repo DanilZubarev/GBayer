@@ -1,0 +1,97 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
+    <div class="row">
+        <div class="col-md-5 text-center">
+            <h3 class="text-center"><strong>Фото товара</strong></h3>
+            {% if items.image.height > items.image.width %}
+            <img src="{{items.image.url}}", height="630px" class="border border-3 rounded-2 shadow border-dark"><br>
+            {% else %}
+            <img src="{{items.image.url}}", width="560px" class="border border-3 rounded-2 shadow border-dark"><br>
+            {% endif %}
+        </div>
+        <div class="col-md-6 px-4">
+            <h3 class="text-center"><strong>Информация о товаре</strong></h3>
+            <form action="{% url 'product' product_id=items.pk %}" id="form_prod_update"
+                      method="post" class="row py-3 h5 border border-3 rounded-2 shadow border-dark bg-white">
+                {% csrf_token %}
+                <div class="col-md-3">
+                    <label class="form-label">Дата создания</label>
+                        <span class="form-control border border-1 shadow border-dark">
+                            {{items.time_create|date:"d.m.Y"}}</span>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Последние изменнения</label>
+                        <span class="form-control border border-1 shadow border-dark">
+                            {{items.time_update|date:"d-m-Y"}}</span>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Статус</label>
+                        <select class="form-select form-control border border-1 shadow border-dark" name="status">
+                            <option selected>{{items.status}}</option>
+                            {% for s in status %}
+                            <option>{{s}}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <label class="form-label">Описание</label>
+                        <span class="form-control border border-1 shadow border-dark">{{items.description}}</span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Клиент</label>
+                        <span class="form-control border border-1 shadow border-dark">{{items.client}}</span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Магазин</label>
+                        <span class="form-control border border-1 shadow border-dark">{{items.shop}}</span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Категория</label>
+                        <span class="form-control border border-1 shadow border-dark">{{items.category}}</span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Прибыль</label>
+                        <span class="form-control border border-1 shadow border-dark">{{profit}}</span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Покупка</label>
+                        <span class="form-control border border-1 shadow border-dark">{{items.purchase_price}}</span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Продажа</label>
+                        <span class="form-control border border-1 shadow border-dark">{{items.selling_price}}</span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Предоплата</label>
+                        <input class="form-control border border-1 shadow border-dark" name="prepayment" value="{{items.prepayment}}">
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Остаток</label>
+                        <span class="form-control h5 border border-1 shadow border-dark">{{items.residue}}</span>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-2 mt-3">
+                    <button type="submit" class="btn btn-outline-dark btn-lg shadow" form="form_prod_update">Изменить</button>
+                </div>
+                <div class="col-5 offset-1">
+                    <br><hr>
+                </div>
+                <div class="col-2 mt-3 text-end">
+                    <a href = "{% url 'general' %}">
+                        <button type="button" class="btn btn-outline-dark btn-lg shadow">Закрыть</button>
+                    </a>
+                </div>
+                <div class="col-2 mt-3 text-end">
+                    <a href = {{items.client.get_absolute_url}}>
+                        <button type="button" class="btn btn-outline-dark btn-lg shadow">Клиент</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

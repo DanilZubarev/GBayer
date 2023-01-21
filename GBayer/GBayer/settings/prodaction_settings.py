@@ -17,7 +17,7 @@ DB_NAME = os.environ.get('DB_NAME')
 DB_PASSWORD = os.environ.get('DB_PASSWORD')
 DB_HOST = os.environ.get('DB_HOST')
 DB_USER = os.environ.get('DB_USER')
-# SECRET_KEY = os.environ. get('SECRET _KEY')
+SECRET_KEY = os.environ. get('SECRET _KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -27,12 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$hu%)nz5e&8#@ybkdy=#y83c-@cd1szely9knm8=u(0wep!7ia'
+# SECRET_KEY = 'django-insecure-$hu%)nz5e&8#@ybkdy=#y83c-@cd1szely9knm8=u(0wep!7ia'
+SECRET_KEY = SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://goldenbayer.herokuapp.com']
+ALLOWED_HOSTS = ['goldenbayer.herokuapp.com']
 
 
 # Application definition

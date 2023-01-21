@@ -1,5 +1,5 @@
 from .prodaction_settings import *
 try:
-    from .local_settings_xexe import *
+    from .local_settings import *
 except ImportError:
     pass

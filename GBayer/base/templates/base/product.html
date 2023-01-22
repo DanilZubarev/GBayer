@@ -6,9 +6,9 @@
         <div class="col-md-5 text-center">
             <h3 class="text-center"><strong>Фото товара</strong></h3>
             {% if items.image.height > items.image.width %}
-            <img src="{{items.image.url}}", height="630px" class="border border-3 rounded-2 shadow border-dark"><br>
+            <img src="{{items.image.url}}" height="630px" class="border border-3 rounded-2 shadow border-dark"><br>
             {% else %}
-            <img src="{{items.image.url}}", width="560px" class="border border-3 rounded-2 shadow border-dark"><br>
+            <img src="{{items.image.url}}" width="560px" class="border border-3 rounded-2 shadow border-dark"><br>
             {% endif %}
         </div>
         <div class="col-md-6 px-4">

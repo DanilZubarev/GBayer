@@ -103,7 +103,7 @@
                         <td width="8%">{{i.time_create|date:"d/m/y"}}</td>
                         <td width="30%"> <a href = "{{i.get_absolute_url}}" class="link-dark"> {{i.description}} </a> </td>
                         {% if i.image %}
-                        <td width="7%"><img src="{{i.image.url}}", height="50"></td>
+                        <td width="7%"><img src="{{i.image.url}}" height="50"></td>
                         {% endif %}
                         <td width="10%"><a href = "{{i.client.get_absolute_url}}" class="link-dark">{{i.client}} </a> </td>
                         <td width="10%">{{i.shop}}</td>

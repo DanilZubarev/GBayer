@@ -13,7 +13,7 @@ class Product(models.Model):
     selling_price = models.IntegerField(verbose_name='Цена продажи')
     prepayment = models.IntegerField(verbose_name='Предоплата')
     residue = models.IntegerField(verbose_name='Остаток')
-    status = models.ForeignKey('Status', on_delete=models.PROTECT, default=3, verbose_name='Статус')
+    status = models.ForeignKey('Status', on_delete=models.PROTECT, default=1, verbose_name='Статус')
     category = models.ForeignKey('Category', on_delete=models.PROTECT, default=2, null=True, verbose_name='Категория')
 
     def get_absolute_url(self):
@@ -32,8 +32,8 @@ class Product(models.Model):
 
 class Client(models.Model):
     telephone = models.CharField(max_length=12, unique=True, verbose_name='Телефон')
-    name = models.CharField(max_length=100, verbose_name='ФИО')
-    adress = models.CharField(max_length=300, verbose_name='Адресс')
+    name = models.CharField(max_length=100, verbose_name='ФИО', null=True)
+    adress = models.CharField(max_length=300, verbose_name='Адресс', null=True)
 
     def get_absolute_url(self):
         return reverse('client', kwargs={'client_id': self.pk})

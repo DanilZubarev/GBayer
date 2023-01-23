@@ -1,10 +1,9 @@
 import datetime
+import pytz
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
-from django.http import HttpResponse
 
 from .form import *
 from .models import *
@@ -53,9 +52,16 @@ def general(request):
         total_profit += i.selling_price - i.purchase_price
         residue_total += i.residue
         total_items += 1
+
+    time = {
+        'Нью-Йорк': datetime.datetime.now(pytz.timezone("America/New_York")).time(),
+        'Италия': datetime.datetime.now(pytz.timezone("Europe/Rome")).time(),
+        'Москва': datetime.datetime.now(pytz.timezone("Europe/Moscow")).time(),
+    }
+
     context = {'title': 'Base', 'items': items, 'total': total_profit, 'shop': shop, 'stat': status, 'cat': category,
                'n': total_items, 'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,
-               'clients': total_clients
+               'clients': total_clients, 'time': time,
                }
     return render(request, 'base/general.html', context)
 

@@ -28,8 +28,13 @@ class StatusAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('title',)
 
+
+class RateAdmin(admin.ModelAdmin):
+        list_display = ('usd', 'eur', 'time_update')
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Client, ClientAdmin)
 admin.site.register(Shop, ShopAdmin)
 admin.site.register(Status, StatusAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Rate, RateAdmin)

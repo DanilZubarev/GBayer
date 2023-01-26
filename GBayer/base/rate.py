@@ -1,3 +1,5 @@
+import datetime
+
 from bs4 import BeautifulSoup
 import requests
 
@@ -7,6 +9,7 @@ from .models import Rate
 def rate():
     url_kz = 'https://banks.kg/bank/bank-bay-tushum/rates'
     html = requests.get(url_kz).text
+
     soup = BeautifulSoup(html, 'lxml')
     ul = soup.find('ul', class_='rates__board')
     rate_list = []
@@ -22,3 +25,6 @@ def rate():
     if Rate.objects.latest('id').usd != float(rate_now['usd']) and Rate.objects.latest('id').eur != float(rate_now['eur']):
         rate_object = Rate(usd=rate_now['usd'], eur=rate_now['eur'])
         rate_object.save()
+    else:
+        Rate.objects.latest('id').time_update = datetime.datetime.now()
+        Rate.objects.latest('id').save()

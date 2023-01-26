@@ -18,7 +18,10 @@ def general(request):
     status = Status.objects.all()
     category = Category.objects.all()
     all_client = Client.objects.all()
-    rate_now = Rate.objects.latest('id')
+    try:
+        rate_now = Rate.objects.latest('id')
+    except Rate.DoesNotExist:
+        rate_now = None
 
     formfilter = FilterForms()
 

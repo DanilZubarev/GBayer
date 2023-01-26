@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 
 from .form import *
 from .models import *
+from .rate import rate
+
 
 
 @login_required
@@ -16,6 +18,7 @@ def general(request):
     status = Status.objects.all()
     category = Category.objects.all()
     all_client = Client.objects.all()
+    rate_now = Rate.objects.latest('id')
 
     formfilter = FilterForms()
 
@@ -25,6 +28,10 @@ def general(request):
     status_filter = request.GET.get('stat')
     category_filter = request.GET.get('cat')
     client_filter = request.GET.get('client')
+
+    if request.GET.get('rate'):
+        rate()
+
     if shop_filter or status_filter or category_filter or client_filter:
         if shop_filter:
             shop_filter = get_object_or_404(Shop, title=shop_filter)
@@ -61,14 +68,16 @@ def general(request):
 
     context = {'title': 'Base', 'items': items, 'total': total_profit, 'shop': shop, 'stat': status, 'cat': category,
                'n': total_items, 'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,
-               'clients': total_clients, 'time': time,
+               'clients': total_clients, 'time': time, 'rate': rate_now,
                }
+
     return render(request, 'base/general.html', context)
 
 
 @login_required
 def new_product(request):
     all_client = Client.objects.all()
+    rate_now = Rate.objects.latest('id')
 
     if request.method == 'POST':
         if 'description' in request.POST.keys():
@@ -98,7 +107,7 @@ def new_product(request):
         form_shop = NewShopForms()
 
     context = {'title': 'Новый товар', 'form': form, 'client': all_client,
-               'form_client': form_client, 'form_shop': form_shop
+               'form_client': form_client, 'form_shop': form_shop, 'rate': rate_now
                }
     return render(request, 'base/new_product.html', context)
 

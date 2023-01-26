@@ -80,3 +80,15 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+
+class Rate(models.Model):
+    usd = models.FloatField(verbose_name='USD')
+    eur = models.FloatField(verbose_name='EUR')
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+    time_update = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
+
+    class Meta:
+        verbose_name = 'Курс валют'
+        verbose_name_plural = 'Курс валют'
+
+

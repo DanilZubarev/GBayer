@@ -126,7 +126,7 @@ def product(request, product_id):
         items.prepayment = int(request.POST.get('prepayment'))
         items.residue = items.selling_price - items.prepayment
         items.save()
-        return redirect('product', product_id=items.pk)
+        return redirect('general')
 
     context = {'title': 'Товар', 'items': items, 'profit': profit, 'status': status}
     return render(request, 'base/product.html', context)

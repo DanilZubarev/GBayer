@@ -8,10 +8,12 @@ class NewProductForms(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['shop'].empty_label = 'Выбери из списка'
+        self.fields['status'].empty_label = 'Выбери из списка'
 
     class Meta:
         model = Product
-        fields = ['description', 'image', 'client', 'shop', 'purchase_price', 'selling_price', 'prepayment', 'category']
+        fields = ['description', 'image', 'client', 'shop', 'purchase_price', 'selling_price', 'prepayment',
+                  'category', 'status']
         widgets = {
             'description': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Описание товара: характеристика, цвет, размер и т.п.'}),
@@ -26,6 +28,7 @@ class NewProductForms(forms.ModelForm):
             'prepayment': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Сумма предоплаты'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
         }
 
 

@@ -57,11 +57,16 @@ def general(request):
     total_items = 0
     residue_total = 0
     total_clients = len(all_client)
+    paid = 0
+    items_paid = 0
 
     for i in items:
         total_profit += i.selling_price - i.purchase_price
         residue_total += i.residue
         total_items += 1
+        if i.status.pk == 1:
+            paid += i.purchase_price
+            items_paid += 1
 
     time = {
         'Нью-Йорк': datetime.datetime.now(pytz.timezone("America/New_York")).time(),
@@ -71,7 +76,7 @@ def general(request):
 
     context = {'title': 'Base', 'items': items, 'total': total_profit, 'shop': shop, 'stat': status, 'cat': category,
                'n': total_items, 'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,
-               'clients': total_clients, 'time': time, 'rate': rate_now,
+               'clients': total_clients, 'time': time, 'rate': rate_now, 'paid': paid, 'items_paid': items_paid,
                }
 
     return render(request, 'base/general.html', context)

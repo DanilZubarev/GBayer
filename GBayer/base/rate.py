@@ -18,8 +18,13 @@ def rate():
         if type(div) != int:
             rate_list.extend(div.text.split())
     rate_now = {
-        'usd': format(float(rate_list[1]) / float(rate_list[4]), '.2f'),
-        'eur': format((float(rate_list[1]) / float(rate_list[4])) * (float(rate_list[3]) / float(rate_list[0])), '.2f'),
+        'usd': format(float(rate_list[1]) / (float(rate_list[4])-0.01) + ((float(rate_list[1]) / (float(rate_list[4]) -
+                                                                                                  0.01)) * 0.01),
+                      '.2f'),
+        'eur': format((float(rate_list[1]) / float(rate_list[4])-0.01) * (float(rate_list[3]) / float(rate_list[0])) +
+                      ((float(rate_list[1]) / float(rate_list[4])-0.01) * (float(rate_list[3]) / float(rate_list[0])) *
+                       0.01),
+                      '.2f'),
     }
 
     if Rate.objects.latest('id').usd != float(rate_now['usd']) and Rate.objects.latest('id').eur != float(rate_now['eur']):

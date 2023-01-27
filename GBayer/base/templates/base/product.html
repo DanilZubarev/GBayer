@@ -27,7 +27,7 @@
                             {{items.time_update|date:"d-m-Y"}}</span>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Статус</label>
+                    <label class="form-label">Статус*</label>
                         <select class="form-select form-control border border-1 shadow border-dark" name="status">
                             <option selected>{{items.status}}</option>
                             {% for s in status %}
@@ -56,15 +56,16 @@
                         <span class="form-control border border-1 shadow border-dark">{{profit}}</span>
                 </div>
                 <div class="col-md-3 mt-3">
-                    <label class="form-label">Покупка</label>
-                        <span class="form-control border border-1 shadow border-dark">{{items.purchase_price}}</span>
+                    <label class="form-label">Покупка*</label>
+                        <input class="form-control border border-1 shadow border-dark" name="purchase_price"
+                               value="{{items.purchase_price}}">
                 </div>
                 <div class="col-md-3 mt-3">
                     <label class="form-label">Продажа</label>
                         <span class="form-control border border-1 shadow border-dark">{{items.selling_price}}</span>
                 </div>
                 <div class="col-md-3 mt-3">
-                    <label class="form-label">Предоплата</label>
+                    <label class="form-label">Предоплата*</label>
                         <input class="form-control border border-1 shadow border-dark" name="prepayment" value="{{items.prepayment}}">
                 </div>
                 <div class="col-md-3 mt-3">

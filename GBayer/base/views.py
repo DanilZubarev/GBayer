@@ -124,6 +124,7 @@ def product(request, product_id):
     if request.method == 'POST':
         items.status = Status.objects.get(title=request.POST.get('status'))
         items.prepayment = int(request.POST.get('prepayment'))
+        items.purchase_price = int(request.POST.get('purchase_price'))
         items.residue = items.selling_price - items.prepayment
         items.save()
         return redirect('general')

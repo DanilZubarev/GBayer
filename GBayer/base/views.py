@@ -97,14 +97,14 @@ def new_product(request):
                 return redirect('general')
         if 'name' in request.POST.keys():
             form_client = NewClientForms(request.POST)
-            form = NewProductForms(request.POST)
+            form = NewProductForms()
             form_shop = NewShopForms()
             if form_client.is_valid():
                 form_client.save()
                 return redirect('new_product')
         if 'title' in request.POST.keys():
             form_shop = NewShopForms(request.POST)
-            form = NewProductForms(request.POST)
+            form = NewProductForms()
             form_client = NewClientForms()
             if form_shop.is_valid():
                 form_shop.save()
@@ -142,6 +142,14 @@ def product(request, product_id):
 def client(request, client_id):
     client = get_object_or_404(Client, pk=client_id)
     product = Product.objects.filter(client=client_id)
+    if request.method == 'POST':
+        if 'name' in request.POST.keys():
+            client.telephone = request.POST.get('telephone')
+            client.name = request.POST.get('name')
+            client.adress = request.POST.get('adress')
+            client.save()
+            return redirect('client', client_id=client.pk )
+
     wait1 = 0
     total = 0
     residue_total = 0
@@ -153,10 +161,11 @@ def client(request, client_id):
         wait = datetime.datetime.now().date() - p.time_create.date()
         if wait.days > wait1:
             wait1 = wait.days
-        if p.status.id == 6:
+        if p.status.title == 'Получено в РФ':
             residue_total_del += p.residue
     context = {'client': client, 'product': product, 'total': total, 'all_product': all_product,
-               'residue_total': residue_total, 'wait': wait1, 'residue_total_del': residue_total_del}
+               'residue_total': residue_total, 'wait': wait1, 'residue_total_del': residue_total_del,
+               }
     return render(request, 'base/client.html', context)
 
 

@@ -3,8 +3,35 @@
 {% block content %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-4 text-center">
-            <h3 class="pd-2"><strong>Клиент</strong></h3>
+        <div class="row col-4 text-center">
+            <h3 class="col-8 pd-2"><strong>Клиент</strong></h3>
+            <div class="col-3 text-center">
+                <button class="btn btn-outline-light text-secondary" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Изменить
+                </button>
+            </div>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body my-3 p-4 bg-light text-dark text-start">
+                    <form action="{% url 'client' client_id=client.pk %}" id="form_client_update"
+                          method="post" class="row py-3">
+                        {% csrf_token %}
+                        <label class="col-3 offset-1 form-label">Телефон</label>
+                        <div class="col-7 offset-1">
+                            <input class="form-control border" name="telephone" value="{{client.telephone}}">
+                        </div>
+                        <label class="col-3 offset-1 form-label">ФИО</label>
+                        <div class="col-7 offset-1">
+                            <input class="form-control border" name="name" value="{{client.name}}">
+                        </div>
+                        <label class="col-3 offset-1 form-label">Адресс</label>
+                        <div class="col-7 offset-1">
+                            <input class="form-control border" name="adress" value="{{client.adress}}">
+                        </div>
+                        <button type="submit" class="col-3 offset-8 btn btn-outline-secondary btn-sm mt-2">Сохранить</button>
+                    </form>
+                </div>
+            </div>
             <div class="p-2 border border-3 rounded-2 shadow border-dark">
                 <div class="row">
                     <div class="col-6">
@@ -28,7 +55,6 @@
                         <h6>Долг по заказам в РФ</h6><hr>
                         <h6>Ждет заказ</h6><hr>
                         <h6>Всего заказов</h6><hr>
-
                     </div>
                     <div class="col-4">
                         <h6>{{total}} р.</h6><hr>

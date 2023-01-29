@@ -10,7 +10,6 @@ from .models import *
 from .rate import rate
 
 
-
 @login_required
 def general(request):
     shop = Shop.objects.all()
@@ -117,6 +116,39 @@ def new_product(request):
                'form_client': form_client, 'form_shop': form_shop, 'rate': rate_now
                }
     return render(request, 'base/new_product.html', context)
+
+
+@login_required
+def copy_product(request, product_id):
+    items = get_object_or_404(Product, pk=product_id)
+    all_client = Client.objects.all()
+    rate_now = Rate.objects.latest('id')
+
+    if request.method == 'POST':
+        if 'name' in request.POST.keys():
+            form_client = NewClientForms(request.POST)
+            form = NewProductForms(instance=items)
+            form_shop = NewShopForms()
+            if form_client.is_valid():
+                form_client.save()
+                return redirect('copy_product', product_id=product_id)
+        if 'title' in request.POST.keys():
+            form_shop = NewShopForms(request.POST)
+            form = NewProductForms(instance=items)
+            form_client = NewClientForms()
+            if form_shop.is_valid():
+                form_shop.save()
+                return redirect('copy_product', product_id=product_id)
+    else:
+        form = NewProductForms(instance=items)
+        form_client = NewClientForms()
+        form_shop = NewShopForms()
+
+    context = {
+        'items': items, 'client': all_client, 'form': form, 'rate': rate_now, 'form_client': form_client,
+        'form_shop': form_shop,
+    }
+    return render(request, 'base/copy_product.html', context)
 
 
 @login_required

@@ -118,23 +118,27 @@
                         </div>
                     </div>
                 </div>
-
             </form>
             <div class="row">
                 <div class="col-2 mt-3">
-                    <button type="submit" class="btn btn-outline-dark btn-lg shadow" form="form_prod_update">Изменить</button>
+                    <button type="submit" class="btn btn-outline-dark shadow" form="form_prod_update">Изменить</button>
                 </div>
-                <div class="col-5 offset-1">
+                <div class="col-2 mt-3 text-end">
+                    <a href = "{% url 'copy_product' product_id=items.pk %}">
+                        <button type="button" class="btn btn-outline-dark shadow">Копировать</button>
+                    </a>
+                </div>
+                <div class="col-2 mt-3 text-end">
+                    <a href = {{items.client.get_absolute_url}}>
+                        <button type="button" class="btn btn-outline-dark shadow">Клиент</button>
+                    </a>
+                </div>
+                <div class="col-4">
                     <br><hr>
                 </div>
                 <div class="col-2 mt-3 text-end">
                     <a href = "{% url 'general' %}">
                         <button type="button" class="btn btn-outline-dark btn-lg shadow">Закрыть</button>
-                    </a>
-                </div>
-                <div class="col-2 mt-3 text-end">
-                    <a href = {{items.client.get_absolute_url}}>
-                        <button type="button" class="btn btn-outline-dark btn-lg shadow">Клиент</button>
                     </a>
                 </div>
             </div>

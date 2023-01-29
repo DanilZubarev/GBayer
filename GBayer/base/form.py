@@ -22,7 +22,7 @@ class NewProductForms(forms.ModelForm):
                 attrs={'class': 'form-control', 'placeholder': 'Введите для поиска...', 'list': 'listClient'}),
             'shop': forms.Select(attrs={'class': 'form-select'}),
             'purchase_price': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Цена покупки в рублях'}),
+                attrs={'class': 'form-control', 'placeholder': 'Цена покупки в рублях', 'id': 'purchase_price'}),
             'selling_price': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Цена продажи'}),
             'prepayment': forms.TextInput(

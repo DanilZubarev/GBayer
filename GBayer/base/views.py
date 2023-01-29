@@ -13,7 +13,6 @@ from .rate import rate
 
 @login_required
 def general(request):
-
     shop = Shop.objects.all()
     status = Status.objects.all()
     category = Category.objects.all()
@@ -24,7 +23,6 @@ def general(request):
         rate_now = None
 
     formfilter = FilterForms()
-
     filter = {}
 
     shop_filter = request.GET.get('shop')
@@ -74,10 +72,11 @@ def general(request):
         'Москва': datetime.datetime.now(pytz.timezone("Europe/Moscow")).time(),
     }
 
-    context = {'title': 'Base', 'items': items, 'total': total_profit, 'shop': shop, 'stat': status, 'cat': category,
-               'n': total_items, 'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,
-               'clients': total_clients, 'time': time, 'rate': rate_now, 'paid': paid, 'items_paid': items_paid,
-               }
+    context = {
+        'title': 'Base', 'items': items, 'total': total_profit, 'shop': shop, 'stat': status, 'cat': category,
+        'n': total_items, 'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,
+        'clients': total_clients, 'time': time, 'rate': rate_now, 'paid': paid, 'items_paid': items_paid,
+    }
 
     return render(request, 'base/general.html', context)
 
@@ -125,6 +124,7 @@ def product(request, product_id):
     items = get_object_or_404(Product, pk=product_id)
     profit = items.selling_price - items.purchase_price
     status = Status.objects.all()
+    rate_now = Rate.objects.latest('id')
 
     if request.method == 'POST':
         items.status = Status.objects.get(title=request.POST.get('status'))
@@ -134,7 +134,7 @@ def product(request, product_id):
         items.save()
         return redirect('general')
 
-    context = {'title': 'Товар', 'items': items, 'profit': profit, 'status': status}
+    context = {'title': 'Товар', 'items': items, 'profit': profit, 'status': status, 'rate': rate_now}
     return render(request, 'base/product.html', context)
 
 

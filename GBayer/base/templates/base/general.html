@@ -30,15 +30,15 @@
                         <button type="button" class="btn btn-white shadow-sm btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Магазины
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-dark" >
-                            {% for s in shop %}
-                            <li>
-                                <form action="">
-                                    <input type="submit" class="dropdown-item" name="shop" value="{{s}}">
-                                </form>
-                            </li>
-                            {% endfor %}
-                        </ul>
+                            <ul class="dropdown-menu dropdown-menu-dark overflow-scroll" style="height: 400px;" >
+                                {% for s in shop %}
+                                <li>
+                                    <form action="">
+                                        <input type="submit" class="dropdown-item" name="shop" value="{{s}}">
+                                    </form>
+                                </li>
+                                {% endfor %}
+                            </ul>
                     </div><hr>
                     <div class="btn-group dropend">
                         <button type="button" class="btn btn-white shadow-sm btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

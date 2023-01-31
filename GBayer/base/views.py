@@ -29,6 +29,17 @@ def general(request):
     category_filter = request.GET.get('cat')
     client_filter = request.GET.get('client')
 
+    if not shop_filter or status_filter or category_filter or client_filter:
+        stat_checkbox = request.GET.get('stat_checkbox')
+
+        for key in request.GET:
+            if key != 'stat_checkbox':
+                item_checkbox = Product.objects.get(pk=key)
+                status_checkbox = Status.objects.get(title=stat_checkbox)
+                item_checkbox.status = status_checkbox
+                item_checkbox.save()
+
+
     if request.GET.get('rate'):
         rate()
 

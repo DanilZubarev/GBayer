@@ -34,6 +34,12 @@
                 </div>
               </div>
             </div>
+            <label class="form-label pt-3">Справочник клиентов</label>
+            <select class="form-select border border-dark rounded-2 shadow">
+                {% for c in client %}
+                <option>{{c.pk}} - {{c.telephone}}</option>
+                {% endfor %}
+            </select>
         </div>
         <div class="col-8">
             <h4 class="md-3">Добавление нового заказа</h4><hr>

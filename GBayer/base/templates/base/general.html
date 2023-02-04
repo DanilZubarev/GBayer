@@ -79,6 +79,15 @@
                             {% endfor %}
                         </datalist>
                     </div><hr>
+                    <div>
+                        <button type="submit" class="btn btn-white shadow-sm btn-sm" form="filter_date">
+                            По дате
+                        </button>
+                        <form name="date" id="filter_date">
+                            <p>ОТ -  <input class="border rounded-2" type="date" name="from"></p>
+                            <p>ДО -  <input class="border rounded-2" type="date" name="to"></p>
+                        </form>
+                    </div><hr>
                 </div>
             </div>
         </div>

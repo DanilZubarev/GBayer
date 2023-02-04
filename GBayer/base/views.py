@@ -22,16 +22,17 @@ def general(request):
         rate_now = None
 
     formfilter = FilterForms()
-    filter = {}
+    filter = {
+        'shop': request.GET.get('shop'),
+        'status': request.GET.get('stat'),
+        'category': request.GET.get('cat'),
+        'client': request.GET.get('client'),
+        'date_from': request.GET.get('from'),
+        'date_to': request.GET.get('to'),
+    }
 
-    shop_filter = request.GET.get('shop')
-    status_filter = request.GET.get('stat')
-    category_filter = request.GET.get('cat')
-    client_filter = request.GET.get('client')
-
-    if not shop_filter or status_filter or category_filter or client_filter:
+    if request.GET.get('stat_checkbox'):
         stat_checkbox = request.GET.get('stat_checkbox')
-
         for key in request.GET:
             if key != 'stat_checkbox':
                 item_checkbox = Product.objects.get(pk=key)
@@ -39,23 +40,33 @@ def general(request):
                 item_checkbox.status = status_checkbox
                 item_checkbox.save()
 
-
     if request.GET.get('rate'):
         rate()
 
-    if shop_filter or status_filter or category_filter or client_filter:
-        if shop_filter:
-            shop_filter = get_object_or_404(Shop, title=shop_filter)
-            filter['shop'] = shop_filter
-        if status_filter:
-            status_filter = get_object_or_404(Status, title=status_filter)
-            filter['status'] = status_filter
-        if category_filter:
-            category_filter = get_object_or_404(Category, title=category_filter)
-            filter['category'] = category_filter
-        if client_filter:
-            client_filter = get_object_or_404(Client, pk=client_filter)
-            filter['client'] = client_filter
+    if filter:
+        if filter['shop']:
+            filter['shop'] = get_object_or_404(Shop, title=filter['shop'])
+        else:
+            filter.pop('shop')
+        if filter['status']:
+            filter['status'] = get_object_or_404(Status, title=filter['status'])
+        else:
+            filter.pop('status')
+        if filter['category']:
+            filter['category'] = get_object_or_404(Category, title=filter['category'])
+        else:
+            filter.pop('category')
+        if filter['client']:
+            filter['client'] = get_object_or_404(Client, pk=filter['client'])
+        else:
+            filter.pop('client')
+
+        if filter['date_from'] or filter['date_to']:
+            filter.pop('date_from')
+            filter.pop('date_to')
+        else:
+            filter.pop('date_from')
+            filter.pop('date_to')
 
         items = Product.objects.filter(**filter)
     else:

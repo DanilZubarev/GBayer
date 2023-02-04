@@ -84,10 +84,10 @@
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body my-3 p-4 bg-light text-dark text-start">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-3">
                                 <input class="form-control" id="price_currency" placeholder="Цена товара в валюте">
                             </div>
-                            <div class="col-2 offset-1 btn-group" role="group" aria-label="Валюта">
+                            <div class="col-2 btn-group" role="group" aria-label="Валюта">
                                   <input type="radio" class="btn-check" name="currency" onclick="func(1)" id="eur" value={{rate.eur|floatformat:2}} autocomplete="off">
                                     <label class="btn btn-outline-secondary" for="eur">
                                       <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-currency-euro" viewBox="0 0 16 16">
@@ -101,6 +101,16 @@
                                       </svg>
                                     </label>
                             </div>
+                            <div class="col-2 offset-1">
+                                <input class="form-control" id="percent" value="10">
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-outline-secondary"  onclick="sale()" data-bs-toggle="button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-percent" viewBox="0 0 16 16">
+                                        <path d="M13.442 2.558a.625.625 0 0 1 0 .884l-10 10a.625.625 0 1 1-.884-.884l10-10a.625.625 0 0 1 .884 0zM4.5 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm7 6a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm0 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                                    </svg>
+                                </button>
+                            </div>
                             <script>
                                 function func(op) {
                                     var purchase_price;
@@ -112,6 +122,16 @@
                                     } else {
                                         purchase_price = price_currency * usd;
                                     }
+                                    document.getElementById("purchase_price").value = purchase_price.toFixed(0);
+                                    }
+                            </script>
+                            <script>
+                                function sale(){
+                                    var purchase_price;
+                                    var percent = Number(document.getElementById("percent").value);
+                                    var price = Number(document.getElementById("purchase_price").value);
+
+                                    purchase_price = price - ((percent/100)*price);
                                     document.getElementById("purchase_price").value = purchase_price.toFixed(0);
                                     }
                             </script>

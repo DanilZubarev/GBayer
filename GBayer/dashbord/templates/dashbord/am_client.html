@@ -1,0 +1,103 @@
+{% extends 'dashbord/base_dashbord.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="row col-4 text-center">
+            <h3 class="col-8"><strong>Клиент</strong></h3>
+            <div class="col-3 text-center">
+                <button class="btn btn-outline-light text-secondary" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Изменить
+                </button>
+            </div>
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body my-3 p-4 bg-light text-dark text-start">
+                    <form action="{% url 'client' client_id=client.pk %}" id="form_client_update"
+                          method="post" class="row py-3">
+                        {% csrf_token %}
+                        <label class="col-3 offset-1 form-label">Телефон</label>
+                        <div class="col-7 offset-1">
+                            <input class="form-control border" name="telephone" value="{{client.telephone}}">
+                        </div>
+                        <label class="col-3 offset-1 form-label">ФИО</label>
+                        <div class="col-7 offset-1">
+                            <input class="form-control border" name="name" value="{{client.name}}">
+                        </div>
+                        <label class="col-3 offset-1 form-label">Адресс</label>
+                        <div class="col-7 offset-1">
+                            <input class="form-control border" name="adress" value="{{client.adress}}">
+                        </div>
+                        <button type="submit" class="col-3 offset-8 btn btn-outline-secondary btn-sm mt-2">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+            <div class="p-2 border border-3 rounded-2 shadow border-dark">
+                <div class="row">
+                    <div class="col-6">
+                        <h3>Телефон</h3><hr>
+                        <h5>ФИО<hr>
+                        Адресс</h5>
+                    </div>
+                    <div class="col-6">
+                        <h3>{{client.telephone}}</h3><hr>
+                        <h5>{{client.name}}<hr>
+                        {{client.adress}}</h5>
+                    </div>
+                </div>
+            </div>
+            <h3 class="mt-5"><strong>Cтатистика</strong></h3>
+            <div class="pt-5 border border-3 rounded-2 shadow border-dark">
+                <div class="row">
+                    <div class="col-8">
+                        <h6>Долг по заказам в РФ</h6><hr>
+                        <h6>Ждет заказ</h6><hr>
+                        <h6>Всего заказов</h6>
+                    </div>
+                    <div class="col-4">
+                        <h6>{{residue_total_del}} р.</h6><hr>
+                        <h6>{{wait}} д.</h6><hr>
+                        <h6>{{all_product}} шт.</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <h3 class="text-center"><strong>Клиент ожидает</strong></h3>
+            <div class="border border-dark rounded-2 shadow g-0">
+                <table class="table">
+                    <thead align="center">
+                        <tr class="table-dark">
+                            <th width="15%">Дата изменения</th>
+                            <th width="32%">Описание</th>
+                            <th width="5%">Фото</th>
+                            <th width="10%">Магазин</th>
+                            <th width="5%">Остаток</th>
+                            <th width="10%">Статус</th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="overflow-scroll" style="height: 530px;">
+                <table class="table table-striped table-hover bg-white rounded-2 shadow">
+                    {% for i in product %}
+                    <tr align="center">
+                        <td width="15%">{{i.time_update|date:"d/m/y"}}</td>
+                        <td width="30%"> <a href = "{{i.get_absolute_url}}" class="link-dark"> {{i.description}} </a> </td>
+                        {% if i.image %}
+                        <td width="7%"><img src="{{i.image.url}}", height="50"></td>
+                        {% endif %}
+                        <td width="10%">{{i.shop}}</td>
+                        <td width="5%">{{i.residue}}</td>
+                        <td width="10%">{{i.status}}</td>
+                    </tr>
+                    {% empty %}
+                    <h3 class="text-center">Товара по таким критериям не найдено</h3>
+                    {% endfor %}
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

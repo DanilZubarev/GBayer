@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
@@ -8,7 +10,7 @@ from base.form import *
 
 
 @login_required
-def am(request, name):
+def am(request):
 
     shop = Shop.objects.all()
     status = Status.objects.all()
@@ -25,6 +27,7 @@ def am(request, name):
         'date_to': request.GET.get('to'),
     }
 
+    print(request.GET)
     if request.GET.get('stat_checkbox'):
         stat_checkbox = request.GET.get('stat_checkbox')
         for key in request.GET:
@@ -59,13 +62,47 @@ def am(request, name):
             filter.pop('date_from')
             filter.pop('date_to')
 
-        items = Product.objects.filter(**filter) & Product.objects.filter(employee=User.objects.get(username=name))
+        items = Product.objects.filter(**filter) & Product.objects.filter(employee=User.objects.get(username=request.user))
     else:
-        items = Product.objects.filter(employee=User.objects.get(username=name))
+        items = Product.objects.filter(employee=User.objects.get(username=request.user))
+
+    paid = 0
+    items_paid = 0
+    for i in items:
+        if i.status.pk == 1:
+            paid += i.purchase_price
+            items_paid += 1
 
     context = {
         'title': 'Base', 'items': items, 'shop': shop, 'stat': status, 'cat': category,
-        'formfilter': formfilter, 'client': all_client,
+        'formfilter': formfilter, 'client': all_client, 'paid': paid, 'items_paid': items_paid,
     }
-
     return render(request, 'dashbord/am_dashbord.html', context)
+
+
+@login_required
+def am_client(request, client_id):
+    client = get_object_or_404(Client, pk=client_id)
+    product = Product.objects.filter(client=client_id, employee=User.objects.get(username=request.user))
+
+    if request.method == 'POST':
+        if 'name' in request.POST.keys():
+            client.telephone = request.POST.get('telephone')
+            client.name = request.POST.get('name')
+            client.adress = request.POST.get('adress')
+            client.save()
+            return redirect('client', client_id=client.pk )
+
+    wait1 = 0
+    residue_total_del = 0
+    all_product = len(product)
+    for p in product:
+        wait = datetime.datetime.now().date() - p.time_create.date()
+        if wait.days > wait1:
+            wait1 = wait.days
+        if p.status.title == 'Получено в РФ':
+            residue_total_del += p.residue
+    context = {'client': client, 'product': product, 'all_product': all_product, 'wait': wait1,
+               'residue_total_del': residue_total_del,
+               }
+    return render(request, 'dashbord/am_client.html', context)

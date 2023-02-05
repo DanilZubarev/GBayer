@@ -79,7 +79,7 @@
                             {% endfor %}
                         </datalist>
                     </div><hr>
-                    <div>
+                    <!--<div>
                         <button type="submit" class="btn btn-white shadow-sm btn-sm" form="filter_date">
                             По дате
                         </button>
@@ -87,7 +87,7 @@
                             <p>ОТ -  <input class="border rounded-2" type="date" name="from"></p>
                             <p>ДО -  <input class="border rounded-2" type="date" name="to"></p>
                         </form>
-                    </div><hr>
+                    </div><hr>-->
                 </div>
             </div>
         </div>
@@ -124,7 +124,7 @@
             </table>
             <div class="overflow-scroll" style="height: 530px;">
                 <table class="table table-striped table-hover bg-white rounded-2 shadow">
-                    <form class="" action="{% url 'general' %}" id="form_checkbox"
+                    <form class="" action="{% url 'am' %}" id="form_checkbox"
                       method="get" enctype="multipart/form-data">
                         {% for i in items %}
                         <tr align="center">
@@ -132,11 +132,11 @@
                             <td width="5%">
                                 <input class="form-check-input" type="checkbox" name={{i.pk}} id="checkbox">
                             </td>
-                            <td width="32%"> <a href = "{{i.get_absolute_url}}" class="link-dark"> {{i.description}} </a> </td>
+                            <td width="32%"> <a href = "{{i.get_absolute_url}}" class="link-dark"> {{i.description}}</a></td>
                             {% if i.image %}
                             <td width="5%"><img src="{{i.image.url}}" height="50"></td>
                             {% endif %}
-                            <td width="10%"><a href = "{{i.client.get_absolute_url}}" class="link-dark">{{i.client}} </a> </td>
+                            <td width="10%"><a href = "{{i.client.get_absolute_url}}" class="link-dark">{{i.client}}</a></td>
                             <td width="10%">{{i.shop}}</td>
                             <td width="5%">{{i.selling_price}}</td>
                             <td width="5%">{{i.residue}}</td>
@@ -147,6 +147,16 @@
                         {% endfor %}
                     </form>
                 </table>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row mt-3 bg-dark text-white rounded-2 text-center" style="height: 30px;">
+                <div class="col-3 offset-3">
+                    <h5>Нужно Оплатить = {{paid}} рублей</h5>
+                </div>
+                <div class="col-3">
+                    <h5>Неоплачено посылок = {{items_paid}} штук</h5>
+                </div>
             </div>
         </div>
     </div>

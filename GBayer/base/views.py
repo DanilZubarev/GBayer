@@ -104,7 +104,7 @@ def general(request):
 
         return render(request, 'base/general.html', context)
     else:
-        return redirect('am', name=request.user.username)
+        return redirect('am')
 
 
 @login_required
@@ -118,12 +118,10 @@ def new_product(request):
             form_client = NewClientForms()
             form_shop = NewShopForms()
             form.employee = request.user
-            print(form.employee)
             if form.is_valid():
                 it = form.save(commit=False)
                 it.employee = request.user
                 it.save()
-                print(form.employee)
                 return redirect('general')
         if 'name' in request.POST.keys():
             form_client = NewClientForms(request.POST)
@@ -204,33 +202,37 @@ def product(request, product_id):
 
 @login_required
 def client(request, client_id):
-    client = get_object_or_404(Client, pk=client_id)
-    product = Product.objects.filter(client=client_id)
-    if request.method == 'POST':
-        if 'name' in request.POST.keys():
-            client.telephone = request.POST.get('telephone')
-            client.name = request.POST.get('name')
-            client.adress = request.POST.get('adress')
-            client.save()
-            return redirect('client', client_id=client.pk )
+    if request.user.username in position['CEO']:
+        client = get_object_or_404(Client, pk=client_id)
+        product = Product.objects.filter(client=client_id)
+        if request.method == 'POST':
+            if 'name' in request.POST.keys():
+                client.telephone = request.POST.get('telephone')
+                client.name = request.POST.get('name')
+                client.adress = request.POST.get('adress')
+                client.save()
+                return redirect('client', client_id=client.pk )
 
-    wait1 = 0
-    total = 0
-    residue_total = 0
-    residue_total_del = 0
-    all_product = len(product)
-    for p in product:
-        total += p.selling_price - p.purchase_price
-        residue_total += p.residue
-        wait = datetime.datetime.now().date() - p.time_create.date()
-        if wait.days > wait1:
-            wait1 = wait.days
-        if p.status.title == 'Получено в РФ':
-            residue_total_del += p.residue
-    context = {'client': client, 'product': product, 'total': total, 'all_product': all_product,
-               'residue_total': residue_total, 'wait': wait1, 'residue_total_del': residue_total_del,
-               }
-    return render(request, 'base/client.html', context)
+        wait1 = 0
+        total = 0
+        residue_total = 0
+        residue_total_del = 0
+        all_product = len(product)
+        for p in product:
+            total += p.selling_price - p.purchase_price
+            residue_total += p.residue
+            wait = datetime.datetime.now().date() - p.time_create.date()
+            if wait.days > wait1:
+                wait1 = wait.days
+            if p.status.title == 'Получено в РФ':
+                residue_total_del += p.residue
+        context = {'client': client, 'product': product, 'total': total, 'all_product': all_product,
+                   'residue_total': residue_total, 'wait': wait1, 'residue_total_del': residue_total_del,
+                   }
+        return render(request, 'base/client.html', context)
+    else:
+        return redirect('am_client', client_id=client_id)
+
 
 
 def start(request):

@@ -8,98 +8,103 @@ from django.contrib.auth.decorators import login_required
 from .form import *
 from .models import *
 from .rate import rate
+from .position import *
 
 
 @login_required
 def general(request):
-    shop = Shop.objects.all()
-    status = Status.objects.all()
-    category = Category.objects.all()
-    all_client = Client.objects.all()
-    try:
-        rate_now = Rate.objects.latest('id')
-    except Rate.DoesNotExist:
-        rate_now = None
+    if request.user.username in position['CEO']:
 
-    formfilter = FilterForms()
-    filter = {
-        'shop': request.GET.get('shop'),
-        'status': request.GET.get('stat'),
-        'category': request.GET.get('cat'),
-        'client': request.GET.get('client'),
-        'date_from': request.GET.get('from'),
-        'date_to': request.GET.get('to'),
-    }
+        shop = Shop.objects.all()
+        status = Status.objects.all()
+        category = Category.objects.all()
+        all_client = Client.objects.all()
+        try:
+            rate_now = Rate.objects.latest('id')
+        except Rate.DoesNotExist:
+            rate_now = None
 
-    if request.GET.get('stat_checkbox'):
-        stat_checkbox = request.GET.get('stat_checkbox')
-        for key in request.GET:
-            if key != 'stat_checkbox':
-                item_checkbox = Product.objects.get(pk=key)
-                status_checkbox = Status.objects.get(title=stat_checkbox)
-                item_checkbox.status = status_checkbox
-                item_checkbox.save()
+        formfilter = FilterForms()
+        filter = {
+            'shop': request.GET.get('shop'),
+            'status': request.GET.get('stat'),
+            'category': request.GET.get('cat'),
+            'client': request.GET.get('client'),
+            'date_from': request.GET.get('from'),
+            'date_to': request.GET.get('to'),
+        }
 
-    if request.GET.get('rate'):
-        rate()
+        if request.GET.get('stat_checkbox'):
+            stat_checkbox = request.GET.get('stat_checkbox')
+            for key in request.GET:
+                if key != 'stat_checkbox':
+                    item_checkbox = Product.objects.get(pk=key)
+                    status_checkbox = Status.objects.get(title=stat_checkbox)
+                    item_checkbox.status = status_checkbox
+                    item_checkbox.save()
 
-    if filter:
-        if filter['shop']:
-            filter['shop'] = get_object_or_404(Shop, title=filter['shop'])
+        if request.GET.get('rate'):
+            rate()
+
+        if any(filter.values()):
+            if filter['shop']:
+                filter['shop'] = get_object_or_404(Shop, title=filter['shop'])
+            else:
+                filter.pop('shop')
+            if filter['status']:
+                filter['status'] = get_object_or_404(Status, title=filter['status'])
+            else:
+                filter.pop('status')
+            if filter['category']:
+                filter['category'] = get_object_or_404(Category, title=filter['category'])
+            else:
+                filter.pop('category')
+            if filter['client']:
+                filter['client'] = get_object_or_404(Client, pk=filter['client'])
+            else:
+                filter.pop('client')
+
+            if filter['date_from'] or filter['date_to']:
+                filter.pop('date_from')
+                filter.pop('date_to')
+            else:
+                filter.pop('date_from')
+                filter.pop('date_to')
+
+            items = Product.objects.filter(**filter)
         else:
-            filter.pop('shop')
-        if filter['status']:
-            filter['status'] = get_object_or_404(Status, title=filter['status'])
-        else:
-            filter.pop('status')
-        if filter['category']:
-            filter['category'] = get_object_or_404(Category, title=filter['category'])
-        else:
-            filter.pop('category')
-        if filter['client']:
-            filter['client'] = get_object_or_404(Client, pk=filter['client'])
-        else:
-            filter.pop('client')
+            items = Product.objects.all()
 
-        if filter['date_from'] or filter['date_to']:
-            filter.pop('date_from')
-            filter.pop('date_to')
-        else:
-            filter.pop('date_from')
-            filter.pop('date_to')
+        total_profit = 0
+        total_items = 0
+        residue_total = 0
+        total_clients = len(all_client)
+        paid = 0
+        items_paid = 0
 
-        items = Product.objects.filter(**filter)
+        for i in items:
+            total_profit += i.selling_price - i.purchase_price
+            residue_total += i.residue
+            total_items += 1
+            if i.status.pk == 1:
+                paid += i.purchase_price
+                items_paid += 1
+
+        time = {
+            'Нью-Йорк': datetime.datetime.now(pytz.timezone("America/New_York")).time(),
+            'Италия': datetime.datetime.now(pytz.timezone("Europe/Rome")).time(),
+            'Москва': datetime.datetime.now(pytz.timezone("Europe/Moscow")).time(),
+        }
+
+        context = {
+            'title': 'Base', 'items': items, 'total': total_profit, 'shop': shop, 'stat': status, 'cat': category,
+            'n': total_items, 'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,
+            'clients': total_clients, 'time': time, 'rate': rate_now, 'paid': paid, 'items_paid': items_paid,
+        }
+
+        return render(request, 'base/general.html', context)
     else:
-        items = Product.objects.all()
-
-    total_profit = 0
-    total_items = 0
-    residue_total = 0
-    total_clients = len(all_client)
-    paid = 0
-    items_paid = 0
-
-    for i in items:
-        total_profit += i.selling_price - i.purchase_price
-        residue_total += i.residue
-        total_items += 1
-        if i.status.pk == 1:
-            paid += i.purchase_price
-            items_paid += 1
-
-    time = {
-        'Нью-Йорк': datetime.datetime.now(pytz.timezone("America/New_York")).time(),
-        'Италия': datetime.datetime.now(pytz.timezone("Europe/Rome")).time(),
-        'Москва': datetime.datetime.now(pytz.timezone("Europe/Moscow")).time(),
-    }
-
-    context = {
-        'title': 'Base', 'items': items, 'total': total_profit, 'shop': shop, 'stat': status, 'cat': category,
-        'n': total_items, 'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,
-        'clients': total_clients, 'time': time, 'rate': rate_now, 'paid': paid, 'items_paid': items_paid,
-    }
-
-    return render(request, 'base/general.html', context)
+        return redirect('am', name=request.user.username)
 
 
 @login_required
@@ -112,8 +117,13 @@ def new_product(request):
             form = NewProductForms(request.POST, request.FILES)
             form_client = NewClientForms()
             form_shop = NewShopForms()
+            form.employee = request.user
+            print(form.employee)
             if form.is_valid():
-                form.save()
+                it = form.save(commit=False)
+                it.employee = request.user
+                it.save()
+                print(form.employee)
                 return redirect('general')
         if 'name' in request.POST.keys():
             form_client = NewClientForms(request.POST)
@@ -224,6 +234,12 @@ def client(request, client_id):
 
 
 def start(request):
+
+    # items = Product.objects.all()
+    # for i in items:
+    #     i.employee = User.objects.get(pk=2)
+    #     i.save()
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']

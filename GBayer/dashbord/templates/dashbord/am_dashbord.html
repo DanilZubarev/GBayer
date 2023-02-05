@@ -1,4 +1,4 @@
-{% extends 'base/base.html' %}
+{% extends 'dashbord/base_dashbord.html' %}
 
 {% block content %}
 <div class="container-fluid">
@@ -133,9 +133,9 @@
                                 <input class="form-check-input" type="checkbox" name={{i.pk}} id="checkbox">
                             </td>
                             <td width="32%"> <a href = "{{i.get_absolute_url}}" class="link-dark"> {{i.description}} </a> </td>
-                            <!--{% if i.image %}
+                            {% if i.image %}
                             <td width="5%"><img src="{{i.image.url}}" height="50"></td>
-                            {% endif %}-->
+                            {% endif %}
                             <td width="10%"><a href = "{{i.client.get_absolute_url}}" class="link-dark">{{i.client}} </a> </td>
                             <td width="10%">{{i.shop}}</td>
                             <td width="5%">{{i.selling_price}}</td>
@@ -148,23 +148,6 @@
                     </form>
                 </table>
             </div>
-        </div>
-    </div>
-</div>
-<br>
-<div class="container-fluid">
-    <div class=" row bg-dark text-white rounded-2 text-center" style="height: 60px;">
-        <div class="col-4">
-            <h5>Общий доход = {{total}} рублей</h5>
-            <h5>Вообще посылок = {{n}} штук</h5>
-        </div>
-        <div class="col-4">
-            <h5>Нам должны = {{residue_total}} рублей</h5>
-            <h5>Всего клиентов = {{clients}} человек</h5>
-        </div>
-        <div class="col-4">
-            <h5>Нужно Оплатить = {{paid}} рублей</h5>
-            <h5>Неоплачено посылок = {{items_paid}} штук</h5>
         </div>
     </div>
 </div>

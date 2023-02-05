@@ -23,6 +23,7 @@ from GBayer import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('base.urls')),
+    path('dashbord', include('dashbord.urls')),
 ]
 
 if settings.DEBUG:

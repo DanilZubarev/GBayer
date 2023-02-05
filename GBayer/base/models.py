@@ -15,6 +15,7 @@ class Product(models.Model):
     residue = models.IntegerField(verbose_name='Остаток')
     status = models.ForeignKey('Status', on_delete=models.PROTECT, default=1, verbose_name='Статус')
     category = models.ForeignKey('Category', on_delete=models.PROTECT, default=2, null=True, verbose_name='Категория')
+    employee = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Сотрудник')
 
     def get_absolute_url(self):
         return reverse('product', kwargs={'product_id': self.pk})

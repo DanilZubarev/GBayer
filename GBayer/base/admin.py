@@ -4,11 +4,11 @@ from .models import *
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'description', 'time_create', 'client', 'shop', 'status', 'category')
+    list_display = ('id', 'employee', 'description', 'time_create', 'client', 'shop', 'status', 'category')
     list_display_links = ('description',)
     search_fields = ('client', 'shop', 'status', 'category')
-    list_editable = ('status',)
-    list_filter = ('client', 'shop', 'status')
+    list_editable = ('status', 'employee')
+    list_filter = ('employee', 'shop', 'status')
 
 
 class ClientAdmin(admin.ModelAdmin):
@@ -30,7 +30,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class RateAdmin(admin.ModelAdmin):
-        list_display = ('usd', 'eur', 'time_update')
+    list_display = ('usd', 'eur', 'time_update')
+
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Client, ClientAdmin)
@@ -38,3 +39,4 @@ admin.site.register(Shop, ShopAdmin)
 admin.site.register(Status, StatusAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Rate, RateAdmin)
+

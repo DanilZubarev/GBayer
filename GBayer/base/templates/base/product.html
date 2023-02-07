@@ -138,10 +138,11 @@
                         </div>
                     </div>
                 </div>
+                <input type="hidden" name="url" value={{url}}>
             </form>
             <div class="row">
                 <div class="col-2 mt-3">
-                    <button type="submit" class="btn btn-outline-dark shadow" form="form_prod_update">Изменить</button>
+                    <button type="submit" onclick="window.history.back(-2)" class="btn btn-outline-dark shadow" form="form_prod_update">Изменить</button>
                 </div>
                 <div class="col-2 mt-3 text-end">
                     <a href = "{% url 'copy_product' product_id=items.pk %}">
@@ -157,13 +158,14 @@
                     <br><hr>
                 </div>
                 <div class="col-2 mt-3 text-end">
-                    <a href = "{% url 'general' %}">
-                        <button type="button" class="btn btn-outline-dark btn-lg shadow">Закрыть</button>
-                    </a>
+                    <!--<a href = "{% url 'general' %}">-->
+                        <button type="button" onclick="history.back()" class="btn btn-outline-dark btn-lg shadow">Закрыть</button>
+                    <!--</a>-->
                 </div>
             </div>
         </div>
     </div>
 </div>
+{{url}}
 
 {% endblock %}

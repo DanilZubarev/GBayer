@@ -75,6 +75,9 @@ def general(request):
         else:
             items = Product.objects.all()
 
+        items_wait = Product.objects.filter(status=1, employee__username__in=position['AM'])
+        items_wait_len = len(items_wait)
+
         total_profit = 0
         total_items = 0
         residue_total = 0
@@ -100,6 +103,7 @@ def general(request):
             'title': 'Base', 'items': items, 'total': total_profit, 'shop': shop, 'stat': status, 'cat': category,
             'n': total_items, 'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,
             'clients': total_clients, 'time': time, 'rate': rate_now, 'paid': paid, 'items_paid': items_paid,
+            'items_wait': items_wait, 'items_wait_len': items_wait_len
         }
 
         return render(request, 'base/general.html', context)
@@ -187,6 +191,7 @@ def product(request, product_id):
     profit = items.selling_price - items.purchase_price
     status = Status.objects.all()
     rate_now = Rate.objects.latest('id')
+    url = request.META.get("HTTP_REFERER")
 
     if request.method == 'POST':
         items.status = Status.objects.get(title=request.POST.get('status'))
@@ -194,9 +199,15 @@ def product(request, product_id):
         items.purchase_price = int(request.POST.get('purchase_price'))
         items.residue = items.selling_price - items.prepayment
         items.save()
-        return redirect('general')
+        if request.path in request.META.get("HTTP_REFERER"):
+            url = request.POST.get('url')
+        else:
+            url = request.META.get("HTTP_REFERER")
+        return redirect(url)
 
-    context = {'title': 'Товар', 'items': items, 'profit': profit, 'status': status, 'rate': rate_now}
+    context = {'title': 'Товар', 'items': items, 'profit': profit, 'status': status, 'rate': rate_now,
+               'url': url}
+
     return render(request, 'base/product.html', context)
 
 
@@ -205,6 +216,7 @@ def client(request, client_id):
     if request.user.username in position['CEO']:
         client = get_object_or_404(Client, pk=client_id)
         product = Product.objects.filter(client=client_id)
+
         if request.method == 'POST':
             if 'name' in request.POST.keys():
                 client.telephone = request.POST.get('telephone')
@@ -234,14 +246,7 @@ def client(request, client_id):
         return redirect('am_client', client_id=client_id)
 
 
-
 def start(request):
-
-    # items = Product.objects.all()
-    # for i in items:
-    #     i.employee = User.objects.get(pk=2)
-    #     i.save()
-
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']

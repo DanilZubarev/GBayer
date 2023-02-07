@@ -39,10 +39,28 @@
                     <label class="form-label">Клиент</label>
                         <span class="form-control border border-1 shadow border-dark">{{items.client}}</span>
                 </div>
-                <div class="col-md-9 mt-3">
+                {% if user.username in ceo %}
+                <div class="col-md-6 mt-3">
+
                     <label class="form-label">Описание</label>
                         <span class="form-control border border-1 shadow border-dark">{{items.description}}</span>
                 </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Cотрудник*</label>
+                        <select class="form-select form-control border border-1 shadow border-dark" name="employee">
+                            <option selected>{{items.employee}}</option>
+                            {% for s in employee %}
+                            <option>{{s}}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+                {% else %}
+                <div class="col-md-9 mt-3">
+
+                    <label class="form-label">Описание</label>
+                        <span class="form-control border border-1 shadow border-dark">{{items.description}}</span>
+                </div>
+                {% endif %}
                 <div class="col-md-6 mt-3">
                     <label class="form-label">Магазин</label>
                         <span class="form-control border border-1 shadow border-dark">{{items.shop}}</span>
@@ -158,14 +176,11 @@
                     <br><hr>
                 </div>
                 <div class="col-2 mt-3 text-end">
-                    <!--<a href = "{% url 'general' %}">-->
-                        <button type="button" onclick="history.back()" class="btn btn-outline-dark btn-lg shadow">Закрыть</button>
-                    <!--</a>-->
+                    <button type="button" onclick="history.back()" class="btn btn-outline-dark btn-lg shadow">Закрыть</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{{url}}
 
 {% endblock %}

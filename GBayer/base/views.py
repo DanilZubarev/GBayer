@@ -4,6 +4,8 @@ import pytz
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
 
 from .form import *
 from .models import *
@@ -190,11 +192,14 @@ def product(request, product_id):
     items = get_object_or_404(Product, pk=product_id)
     profit = items.selling_price - items.purchase_price
     status = Status.objects.all()
+    employee = User.objects.all()
     rate_now = Rate.objects.latest('id')
     url = request.META.get("HTTP_REFERER")
+    ceo = position['CEO']
 
     if request.method == 'POST':
         items.status = Status.objects.get(title=request.POST.get('status'))
+        items.employee = User.objects.get(username=request.POST.get('employee'))
         items.prepayment = int(request.POST.get('prepayment'))
         items.purchase_price = int(request.POST.get('purchase_price'))
         items.residue = items.selling_price - items.prepayment
@@ -206,7 +211,7 @@ def product(request, product_id):
         return redirect(url)
 
     context = {'title': 'Товар', 'items': items, 'profit': profit, 'status': status, 'rate': rate_now,
-               'url': url}
+               'url': url, 'employee': employee, 'ceo': ceo}
 
     return render(request, 'base/product.html', context)
 

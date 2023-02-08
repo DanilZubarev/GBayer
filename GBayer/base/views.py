@@ -109,8 +109,10 @@ def general(request):
         }
 
         return render(request, 'base/general.html', context)
-    else:
+    elif request.user.username in position['AM']:
         return redirect('am')
+    else:
+        return redirect('sk')
 
 
 @login_required

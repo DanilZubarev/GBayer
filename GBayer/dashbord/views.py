@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 
 from base.form import *
-
+from .form import *
 
 
 @login_required
@@ -27,7 +27,6 @@ def am(request):
         'date_to': request.GET.get('to'),
     }
 
-    print(request.GET)
     if request.GET.get('stat_checkbox'):
         stat_checkbox = request.GET.get('stat_checkbox')
         for key in request.GET:
@@ -74,7 +73,7 @@ def am(request):
             items_paid += 1
 
     context = {
-        'title': 'Base', 'items': items, 'shop': shop, 'stat': status, 'cat': category,
+        'title': 'Рабочий стол', 'items': items, 'shop': shop, 'stat': status, 'cat': category,
         'formfilter': formfilter, 'client': all_client, 'paid': paid, 'items_paid': items_paid,
     }
     return render(request, 'dashbord/am_dashbord.html', context)
@@ -106,3 +105,33 @@ def am_client(request, client_id):
                'residue_total_del': residue_total_del,
                }
     return render(request, 'dashbord/am_client.html', context)
+
+
+@login_required
+def sk(request):
+    goods = Goods.objects.all()
+
+    if request.method == 'POST':
+        if 'description' in request.POST.keys():
+            form = NewGoodsForms(request.POST, request.FILES)
+            form_brand = NewClientForms()
+            form.employee = request.user
+            if form.is_valid():
+                it = form.save(commit=False)
+                it.employee = request.user
+                it.save()
+                return redirect('sk')
+        if 'title' in request.POST.keys():
+            form_brand = NewBrandForms(request.POST)
+            form = NewGoodsForms()
+            if form_brand.is_valid():
+                form_brand.save()
+                return redirect('sk')
+    else:
+        form = NewGoodsForms()
+        form_brand = NewClientForms()
+
+    context = {
+        'title': 'Рабочий стол', 'goods': goods, 'form': form, 'form_brand': form_brand
+    }
+    return render(request, 'dashbord/sk_dashbord.html', context)

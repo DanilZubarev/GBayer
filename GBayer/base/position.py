@@ -1,5 +1,6 @@
 
 position = {
     'CEO': ('Vitana', 'Danil',),
-    'AM': ('Polina',)
+    'AM': ('Polina',),
+    'SK': ('Kladovka',),
     }

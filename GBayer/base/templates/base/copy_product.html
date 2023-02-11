@@ -66,6 +66,7 @@
                     <div class="col-md-5">
                         <label class="form-label">Клиент</label>
                             <input class="form-control border" name="client" placeholder="Введите для поиска..." list="listClient">
+                        <div style="color: red;">{{form.client.errors}}</div>
                         <datalist id="listClient">
                             {% for c in client %}
                             <option label="{{c.telephone}}" value={{c.pk}}></option>
@@ -107,14 +108,17 @@
                     <div class="col-md-3">
                         <label class="form-label">Цена покупки в рублях</label>
                         {{form.purchase_price}}
+                        <div style="color: red;">{{form.purchase_price.errors}}</div>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Цена продажи</label>
                         {{form.selling_price}}
+                        <div style="color: red;">{{form.selling_price.errors}}</div>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Сумма предоплаты</label>
                         {{form.prepayment}}
+                        <div style="color: red;">{{form.prepayment.errors}}</div>
                     </div>
                     <p></p>
                 </form>

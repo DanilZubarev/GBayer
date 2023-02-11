@@ -54,6 +54,7 @@
                     <div class="col-md-5">
                         <label class="form-label">Фото</label>
                         {{form.image}}
+                        <div style="color: red;">{{ form.image.errors}}</div>
                     </div>
                     <div class="col-md-3 offset-1">
                         <label class="form-label">Категория</label>
@@ -66,6 +67,7 @@
                     <div class="col-md-5">
                         <label class="form-label">Клиент</label>
                         {{form.client}}
+                        <div style="color: red;">{{ form.client.errors}}</div>
                         <datalist id="listClient">
                             {% for c in client %}
                             <option label="{{c.telephone}}" value={{c.pk}}></option>
@@ -108,14 +110,18 @@
                         <label class="form-label">Цена покупки в рублях</label>
                         <input class="form-control" name="purchase_price"
                                placeholder="Цена в рублях" id="purchase_price">
+                        <div style="color: red;">{{ form.purchase_price.errors}}</div>
+
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Цена продажи</label>
                         {{form.selling_price}}
+                        <div style="color: red;">{{ form.selling_price.errors}}</div>
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Сумма предоплаты</label>
                         {{form.prepayment}}
+                        <div class="form-error" style="color: red;">{{form.prepayment.errors}}</div>
                     </div>
                     <p></p>
                 </form>

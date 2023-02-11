@@ -26,11 +26,13 @@
                             {% csrf_token %}
                             <div>
                                 <label class="form-label">Логин</label>
+                                <div style="color: red;">{{form.username.errors}}</div>
                                 <input class="form-control border border-1 shadow border-dark" name="username">
                             </div>
                             <br>
                             <div>
                                 <label class="form-label">Пароль</label>
+                                <div style="color: red;">{{form.password.errors}}</div>
                                 <input class="form-control border border-1 shadow border-dark" type="password" name="password">
                             </div>
                             <br>

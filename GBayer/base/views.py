@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Sum
 
 
 from .form import *
@@ -32,8 +33,6 @@ def general(request):
             'status': request.GET.get('stat'),
             'category': request.GET.get('cat'),
             'client': request.GET.get('client'),
-            'date_from': request.GET.get('from'),
-            'date_to': request.GET.get('to'),
         }
 
         if request.GET.get('stat_checkbox'):
@@ -66,13 +65,6 @@ def general(request):
             else:
                 filter.pop('client')
 
-            if filter['date_from'] or filter['date_to']:
-                filter.pop('date_from')
-                filter.pop('date_to')
-            else:
-                filter.pop('date_from')
-                filter.pop('date_to')
-
             items = Product.objects.filter(**filter)
         else:
             items = Product.objects.all()
@@ -81,19 +73,14 @@ def general(request):
         items_wait_len = len(items_wait)
 
         total_profit = 0
-        total_items = 0
-        residue_total = 0
-        total_clients = len(all_client)
-        paid = 0
-        items_paid = 0
+        total_items = len(items)
+        residue_total = items.aggregate(Sum('residue'))['residue__sum']
+        paid_items = items.filter(status=1)
+        paid = paid_items.aggregate(Sum('purchase_price'))['purchase_price__sum']
+        items_paid = len(paid_items)
 
         for i in items:
             total_profit += i.selling_price - i.purchase_price
-            residue_total += i.residue
-            total_items += 1
-            if i.status.pk == 1:
-                paid += i.purchase_price
-                items_paid += 1
 
         time = {
             'Нью-Йорк': datetime.datetime.now(pytz.timezone("America/New_York")).time(),
@@ -104,7 +91,7 @@ def general(request):
         context = {
             'title': 'Base', 'items': items, 'total': total_profit, 'shop': shop, 'stat': status, 'cat': category,
             'n': total_items, 'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,
-            'clients': total_clients, 'time': time, 'rate': rate_now, 'paid': paid, 'items_paid': items_paid,
+            'clients': len(all_client), 'time': time, 'rate': rate_now, 'paid': paid, 'items_paid': items_paid,
             'items_wait': items_wait, 'items_wait_len': items_wait_len
         }
 
@@ -112,7 +99,7 @@ def general(request):
     elif request.user.username in position['AM']:
         return redirect('am')
     else:
-        return redirect('sk')
+        return redirect('sk_send')
 
 
 @login_required
@@ -220,7 +207,7 @@ def product(request, product_id):
 
 @login_required
 def client(request, client_id):
-    if request.user.username in position['CEO']:
+    if request.user.username not in position['AM']:
         client = get_object_or_404(Client, pk=client_id)
         product = Product.objects.filter(client=client_id)
 

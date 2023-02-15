@@ -11,14 +11,14 @@ class NewGoodsForms(forms.ModelForm):
 
     class Meta:
         model = Goods
-        fields = ['description', 'image', 'weight', 'brand', 'shipping', 'batch',]
+        fields = ['description', 'image', 'weight', 'brand']
         widgets = {
             'description': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Описание товара: характеристика, цвет, размер и т.п.'}),
             'image': forms.FileInput(attrs={'class': 'form-control form-control'}),
             'brand': forms.Select(attrs={'class': 'form-select'}),
             'weight': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Вес в граммах'}),
+                attrs={'class': 'form-control', 'placeholder': 'Введите вес'}),
         }
 
 

@@ -233,3 +233,12 @@ def sk_send(request):
 
     return render(request, 'dashbord/sk_send.html', context)
 
+
+@login_required
+def sk_ceo(request):
+    batchs = Batch.objects.filter(shipping=None)
+
+    context = {
+        'title': 'Cклад', "batchs": batchs,
+    }
+    return render(request, 'dashbord/sk_ceo.html', context)

@@ -70,10 +70,8 @@ def general(request):
             items = Product.objects.all()
 
         items_wait = Product.objects.filter(status=1, employee__username__in=position['AM'])
-        items_wait_len = len(items_wait)
 
         total_profit = 0
-        total_items = len(items)
         residue_total = items.aggregate(Sum('residue'))['residue__sum']
         paid_items = items.filter(status=1)
         paid = paid_items.aggregate(Sum('purchase_price'))['purchase_price__sum']
@@ -90,9 +88,8 @@ def general(request):
 
         context = {
             'title': 'Base', 'items': items, 'total': total_profit, 'shop': shop, 'stat': status, 'cat': category,
-            'n': total_items, 'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,
-            'clients': len(all_client), 'time': time, 'rate': rate_now, 'paid': paid, 'items_paid': items_paid,
-            'items_wait': items_wait, 'items_wait_len': items_wait_len
+            'formfilter': formfilter, 'client': all_client, 'residue_total': residue_total,'time': time,
+            'rate': rate_now, 'paid': paid, 'items_paid': items_paid,'items_wait': items_wait,
         }
 
         return render(request, 'base/general.html', context)

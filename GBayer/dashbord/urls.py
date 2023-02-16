@@ -8,4 +8,5 @@ urlpatterns = [
     path('sk', sk, name='sk'),
     path('sk_batch', sk_batch, name='sk_batch'),
     path('sk_send', sk_send, name='sk_send'),
+    path('sk_ceo', sk_ceo, name='sk_ceo'),
 ]

@@ -156,6 +156,24 @@
                         </div>
                     </div>
                 </div>
+                {% if items.goods %}
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Вес в кг.</label>
+                        <span class="form-control h5 border border-1 shadow border-dark">{{items.goods.weight}}</span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">Доставка</label>
+                        <span class="form-control h5 border border-1 shadow border-dark">{{items.goods.shipping}}</span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">№ на складе</label>
+                        <span class="form-control h5 border border-1 shadow border-dark">{{items.goods.pk}}</span>
+                </div>
+                <div class="col-md-3 mt-3">
+                    <label class="form-label">№ Партии</label>
+                        <span class="form-control h5 border border-1 shadow border-dark">{{items.goods.batch}}</span>
+                </div>
+                {% endif %}
                 <input type="hidden" name="url" value={{url}}>
             </form>
             <div class="row">

@@ -42,9 +42,16 @@
                         {% for i in goods %}
                         <tr align="center">
                             <td width="50%"> <a href = "{{i.get_absolute_url}}" class="link-dark">{{i.description}}</a></td>
-                            {% if i.image %}
-                            <td width="20%"><img src="{{i.image.url}}" height="50"></td>
-                            {% endif %}
+                            <td width="20%">
+                                <a href="#" class="image-link" data-bs-toggle="modal" data-bs-target="#exampleModal{{ forloop.counter }}">
+                                    <img src="{{ i.image.url }}" height="50">
+                                </a>
+                            </td>
+                            <div class="modal fade" id="exampleModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered container-fluid">
+                                    <img src="{{ i.image.url }}" height="700">
+                                </div>
+                            </div>
                             <td width="15%">{{i.brand}}</td>
                             <td width="15%">
                                 <input class="form-check-input" type="checkbox" name={{i.pk}} id="goods">

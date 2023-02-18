@@ -4,7 +4,7 @@ from .models import *
 
 
 class GoodsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'description', 'brand', 'product', 'batch')
+    list_display = ('id', 'description', 'brand', 'product', 'batch', 'weight')
     list_display_links = ('description',)
     search_fields = ('id',)
 

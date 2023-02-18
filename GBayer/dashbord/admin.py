@@ -4,7 +4,7 @@ from .models import *
 
 
 class GoodsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'description', 'brand', 'product')
+    list_display = ('id', 'description', 'brand', 'product', 'batch')
     list_display_links = ('description',)
     search_fields = ('id',)
 
@@ -14,7 +14,7 @@ class BrandAdmin(admin.ModelAdmin):
 
 
 class BatchAdmin(admin.ModelAdmin):
-    list_display = ('id',)
+    list_display = ('id', 'weight', 'shipping')
 
 
 admin.site.register(Goods, GoodsAdmin)

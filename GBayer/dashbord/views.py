@@ -163,23 +163,23 @@ def sk(request):
 @login_required
 def sk_batch(request):
     goods = Goods.objects.filter(batch=None)
+    brands = Brand.objects.all()
 
-    if request.method == 'GET':
-        if request.GET.keys():
-            batch = Batch(employee=request.user)
+    if request.GET.get('batch'):
+        goods = Goods.objects.filter(batch=None)
+        if goods:
+            weight = goods.aggregate(Sum('weight'))['weight__sum']
+            batch = Batch(employee=request.user, weight=weight)
             batch.save()
-            for key in request.GET:
-                item_checkbox = Goods.objects.get(pk=key)
-                item_checkbox.batch = batch
-                item_checkbox.save()
-            goods = Goods.objects.filter(batch=batch)
-            batch.weight = goods.aggregate(Sum('weight'))['weight__sum']
-            batch.save()
+            for item in goods:
+                item.batch = batch
+                item.save()
+            return redirect('sk_batch')
 
     if request.method == 'POST':
-        if 'description' in request.POST.keys():
+        if 'description' in request.POST.keys() and 'pk' not in request.POST.keys():
             form = NewGoodsForms(request.POST, request.FILES)
-            form_brand = NewClientForms()
+            form_brand = NewBrandForms()
             form.employee = request.user
             if form.is_valid():
                 it = form.save(commit=False)
@@ -192,12 +192,20 @@ def sk_batch(request):
             if form_brand.is_valid():
                 form_brand.save()
                 return redirect('sk_batch')
+        if 'pk' in request.POST.keys():
+            good = goods.get(pk=request.POST.get('pk'))
+            good.description = request.POST.get('description')
+            good.weight = float(request.POST.get('weight').replace(',', '.'))
+            brand = Brand.objects.get(title=request.POST.get('brand'))
+            good.brand = brand
+            good.save()
+            return redirect('sk_batch')
     else:
         form = NewGoodsForms()
         form_brand = NewBrandForms()
 
     context = {
-        'title': 'Товар на складе', 'goods': goods, 'form': form, 'form_brand': form_brand
+        'title': 'Товар на складе', 'goods': goods, 'form': form, 'form_brand': form_brand, 'brands': brands,
     }
     return render(request, 'dashbord/sk_batch.html', context)
 
@@ -205,6 +213,7 @@ def sk_batch(request):
 @login_required
 def sk_send(request):
     goods = Goods.objects.exclude(product=None)
+    goods = goods.exclude(product__status=6)
     text = ''
     if request.GET.keys():
         if 'shipment' in request.GET.keys():

@@ -58,10 +58,25 @@
                         <tr align="center">
                             <td width="5%">{{i.product.time_update|date:"d/m/y"}}</td>
                             <td width="5%">{{i.pk}}</td>
-                            <td width="20%"> <a href = "{{i.product.get_absolute_url}}" class="link-dark">{{i.product.description}}</a></td>
-                            <td width="20%"> <a href = "{{i.get_absolute_url}}" class="link-dark">{{i.description}}</a></td>
+                            <td width="20%">
+                                <a href = "{{i.product.get_absolute_url}}" class="link-dark">
+                                    {{i.product.description}}
+                                </a>
+                            </td>
+                            <td width="20%">{{i.description}}</td>
                             {% if i.image %}
-                            <td width="10%"><img src="{{i.image.url}}" height="50"></td>
+                            <td width="10%">
+                                <a href="#" class="image-link" data-bs-toggle="modal"
+                                   data-bs-target="#exampleModal{{ forloop.counter }}">
+                                    <img src="{{ i.image.url }}" height="50">
+                                </a>
+                                <div class="modal fade" id="exampleModal{{ forloop.counter }}" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered container-fluid">
+                                        <img src="{{ i.image.url }}" height="700">
+                                    </div>
+                                </div>
+                            </td>
                             {% endif %}
                             <td width="10%"><a href = "{{i.product.client.get_absolute_url}}" class="link-dark">{{i.product.client}}</a></td>
                             <td width="10%">{{i.product.residue}}</td>

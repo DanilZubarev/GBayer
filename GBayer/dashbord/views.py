@@ -111,7 +111,7 @@ def am_client(request, client_id):
 def sk(request):
     shop = Shop.objects.all()
     brand = Brand.objects.all()
-    goods = Goods.objects.filter(product=None)
+    goods = Goods.objects.filter(product=None).order_by("brand")
     products = Product.objects.filter(Q(status='2') | Q(status='3'))
 
     if request.method == 'POST':
@@ -127,6 +127,7 @@ def sk(request):
         product.status = Status.objects.get(pk=4)
         good.save()
         product.save()
+        return redirect(request.META.get("HTTP_REFERER"))
 
     shop_f = request.GET.get('shop')
     brand_f = request.GET.get('brand')
@@ -232,6 +233,7 @@ def sk_send(request):
                     status_checkbox = Status.objects.get(title=stat_checkbox)
                     item_checkbox.status = status_checkbox
                     item_checkbox.save()
+                    return redirect(request.META.get("HTTP_REFERER"))
 
     sum_weight = goods.aggregate(Sum('weight'))['weight__sum']
     stat = Status.objects.filter(Q(pk=5) | Q(pk=6))

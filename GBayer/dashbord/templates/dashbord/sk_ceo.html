@@ -6,9 +6,11 @@
         <div class="col-md-3 mt-3">
             <button class="shadow btn btn-outline-dark position-relative" type="button" data-bs-toggle="collapse"
                     data-bs-target="#batchs" aria-expanded="false" aria-controls="batchs">
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {{batchs.count}}
-                </span>
+                    {% if batchs.count > 0 %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{batchs.count}}
+                    </span>
+                    {% endif %}
                 Оплата доставки
             </button>
         </div>
@@ -40,11 +42,9 @@
                         <div class="col-2">
                             <label class="form-label">{{b.weight|floatformat:2}} кг.</label>
                         </div>
-                        <form action="{% url 'sk_ceo' %}" method="post">
-                        {% csrf_token %}
                         <div class="col-4">
                             <label class="form-label">
-                                <input class="form-control-sm border border-1 border-dark" name="shipping {{b.pk}}">
+                                <input class="form-control-sm border border-1 border-dark" name="shipping">
                             </label>
                         </div>
                         <div class="col-1">
@@ -52,7 +52,6 @@
                                 Внести
                             </button>
                         </div>
-                        </form>
                     </form>
                     {% endfor %}
                 </div>

@@ -10,6 +10,7 @@ class Product(models.Model):
     client = models.ForeignKey('Client', on_delete=models.PROTECT, verbose_name='Клиент')
     shop = models.ForeignKey('Shop', on_delete=models.PROTECT, verbose_name='Магазин')
     purchase_price = models.IntegerField(verbose_name='Цена покупки', null=True)
+    profit = models.IntegerField(verbose_name='Прибыль', null=True)
     selling_price = models.IntegerField(verbose_name='Цена продажи')
     prepayment = models.IntegerField(verbose_name='Предоплата')
     residue = models.IntegerField(verbose_name='Остаток')

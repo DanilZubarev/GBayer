@@ -1,4 +1,5 @@
 import datetime
+from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
@@ -53,13 +54,6 @@ def am(request):
         else:
             filter.pop('client')
 
-        if filter['date_from'] or filter['date_to']:
-            filter.pop('date_from')
-            filter.pop('date_to')
-        else:
-            filter.pop('date_from')
-            filter.pop('date_to')
-
         items = Product.objects.filter(**filter) & Product.objects.filter(
             employee=User.objects.get(username=request.user))
     else:
@@ -113,6 +107,8 @@ def sk(request):
     brand = Brand.objects.all()
     goods = Goods.objects.filter(product=None).order_by("brand")
     products = Product.objects.filter(Q(status='2') | Q(status='3'))
+    ten_days_ago = datetime.now() - timedelta(days=0)
+    products = products.filter(time_update__date__lte=ten_days_ago.date())
 
     if request.method == 'POST':
         good_product = request.POST.dict()
@@ -125,6 +121,9 @@ def sk(request):
         product = Product.objects.get(pk=keys[2])
         good.product = product
         product.status = Status.objects.get(pk=4)
+        if not good.shipping:
+            good.shipping = 0
+        good.product.profit = good.product.profit - good.shipping
         good.save()
         product.save()
         return redirect(request.META.get("HTTP_REFERER"))
@@ -220,7 +219,7 @@ def sk_send(request):
         if 'shipment' in request.GET.keys():
             goods = goods.filter(product__status=5)
             text = f'Всего позиций к отправке {len(goods)} общий вес: ' \
-                   f'{goods.aggregate(Sum("weight"))["weight__sum"]} кг.'
+                   f'{round(goods.aggregate(Sum("weight"))["weight__sum"],2)} кг.'
         if 'invoice' in request.GET.keys():
             goods = goods.filter(product__status=4).order_by("product__client")
             text = f'Необходимо создать накладные по {len(goods)} позициям для ' \
@@ -233,7 +232,7 @@ def sk_send(request):
                     status_checkbox = Status.objects.get(title=stat_checkbox)
                     item_checkbox.status = status_checkbox
                     item_checkbox.save()
-                    return redirect(request.META.get("HTTP_REFERER"))
+            return redirect(request.META.get("HTTP_REFERER"))
 
     sum_weight = goods.aggregate(Sum('weight'))['weight__sum']
     stat = Status.objects.filter(Q(pk=5) | Q(pk=6))
@@ -248,6 +247,19 @@ def sk_send(request):
 @login_required
 def sk_ceo(request):
     batchs = Batch.objects.filter(shipping=None)
+
+    if request.method == 'POST':
+        batch = Batch.objects.get(pk=request.POST.get('pk'))
+        batch.shipping = int(request.POST.get('shipping'))
+        batch.shipping_kg = int(batch.shipping / batch.weight)
+        goods = Goods.objects.filter(batch=batch)
+        for g in goods:
+            g.shipping = int(g.weight * batch.shipping_kg)
+            if g.product:
+                g.product.profit = g.product.profit - g.shipping
+                g.product.save()
+                g.save()
+        batch.save()
 
     context = {
         'title': 'Cклад', "batchs": batchs,

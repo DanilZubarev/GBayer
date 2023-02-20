@@ -16,6 +16,10 @@ from .position import *
 
 @login_required
 def general(request):
+    items = Product.objects.all()
+    for i in items:
+        i.profit = i.selling_price - i.purchase_price
+        i.save()
     if request.user.username in position['CEO']:
 
         shop = Shop.objects.all()
@@ -113,6 +117,7 @@ def new_product(request):
             if form.is_valid():
                 it = form.save(commit=False)
                 it.employee = request.user
+                it.profit = it.selling_price - it.purchase_price
                 it.save()
                 return redirect('general')
         if 'name' in request.POST.keys():
@@ -176,7 +181,6 @@ def copy_product(request, product_id):
 @login_required
 def product(request, product_id):
     items = get_object_or_404(Product, pk=product_id)
-    profit = items.selling_price - items.purchase_price
     status = Status.objects.all()
     employee = User.objects.all()
     rate_now = Rate.objects.latest('id')
@@ -189,6 +193,7 @@ def product(request, product_id):
         items.prepayment = int(request.POST.get('prepayment'))
         items.purchase_price = int(request.POST.get('purchase_price'))
         items.residue = items.selling_price - items.prepayment
+        items.profit = items.selling_price - items.purchase_price
         items.save()
         if request.path in request.META.get("HTTP_REFERER"):
             url = request.POST.get('url')
@@ -196,7 +201,7 @@ def product(request, product_id):
             url = request.META.get("HTTP_REFERER")
         return redirect(url)
 
-    context = {'title': 'Товар', 'items': items, 'profit': profit, 'status': status, 'rate': rate_now,
+    context = {'title': 'Товар', 'items': items, 'status': status, 'rate': rate_now,
                'url': url, 'employee': employee, 'ceo': ceo}
 
     return render(request, 'base/product.html', context)
@@ -217,13 +222,11 @@ def client(request, client_id):
                 return redirect('client', client_id=client.pk )
 
         wait1 = 0
-        total = 0
-        residue_total = 0
+        total = product.aggregate(Sum('profit'))['profit__sum']
+        residue_total = product.aggregate(Sum('residue'))['residue__sum']
         residue_total_del = 0
         all_product = len(product)
         for p in product:
-            total += p.selling_price - p.purchase_price
-            residue_total += p.residue
             wait = datetime.datetime.now().date() - p.time_create.date()
             if wait.days > wait1:
                 wait1 = wait.days

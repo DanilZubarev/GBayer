@@ -34,6 +34,7 @@ class Batch(models.Model):
     employee = models.ForeignKey('auth.User', null=True, on_delete=models.CASCADE, verbose_name='Сотрудник')
     weight = models.FloatField(null=True, verbose_name='Общий вес')
     shipping = models.IntegerField(null=True, verbose_name='Цена доставки')
+    shipping_kg = models.IntegerField(null=True, verbose_name='Цена за кг.')
 
     def __str__(self):
         return str(self.pk)

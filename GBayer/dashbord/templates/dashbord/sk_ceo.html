@@ -37,7 +37,10 @@
                             <label class="form-label">{{b.pk}}</label>
                         </div>
                         <div class="col-3">
-                            <label class="form-label">Содержимое</label>
+                            <a class="link-dark" data-bs-toggle="collapse" href="#collaps_include{{b.pk}}"
+                               aria-expanded="false" aria-controls="collaps_include{{b.pk}}">
+                                Содержимое
+                            </a>
                         </div>
                         <div class="col-2">
                             <label class="form-label">{{b.weight|floatformat:2}} кг.</label>
@@ -51,6 +54,43 @@
                             <button type="submit" class="btn btn-outline-secondary btn-sm" name="pk" value="{{b.pk}}">
                                 Внести
                             </button>
+                        </div>
+                        <div class="collapse" id="collaps_include{{b.pk}}">
+                            <div class="card card-body overflow-scroll text-center" style="height: 300px;">
+                                <div class="row">
+                                    <div class="col-1">
+                                        <label class="form-label">№</label>
+                                    </div>
+                                    <div class="col-7">
+                                        <label class="form-label">Описание</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">Бренд</label>
+                                    </div>
+                                    <div class="col-1">
+                                        <label class="form-label">Вес</label>
+                                    </div>
+                                    <hr>
+                                </div>
+                                {% for g in goods_batch %}
+                                    {% if g.batch == b %}
+                                <div class="row">
+                                    <div class="col-1">
+                                        <label class="form-label">{{g.pk}}</label>
+                                    </div>
+                                    <div class="col-7">
+                                        <label class="form-label">{{g.description}}</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">{{g.brand}}</label>
+                                    </div>
+                                    <div class="col-1">
+                                        <label class="p-1 form-label">{{g.weight|floatformat:2}}</label>
+                                    </div>
+                                </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </form>
                     {% endfor %}

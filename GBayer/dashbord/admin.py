@@ -14,7 +14,7 @@ class BrandAdmin(admin.ModelAdmin):
 
 
 class BatchAdmin(admin.ModelAdmin):
-    list_display = ('id', 'weight', 'shipping')
+    list_display = ('id', 'weight', 'shipping', 'shipping_kg')
 
 
 admin.site.register(Goods, GoodsAdmin)

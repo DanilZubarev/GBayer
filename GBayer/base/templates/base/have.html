@@ -5,7 +5,9 @@
     <div class="row">
         <div class="col-2"><h5>Уже в России</h5></div>
         <div class="col-6 offset-4">
+            {% if user.username in ceo %}
             <h5 class="p-1">Всего выкупленно на наличае {{total}} товаров на общую сумму {{sum_purchase_price}}р.</h5>
+            {% endif %}
         </div>
         <div class="row d-flex flex-row mx-5">
             {% for h in have %}

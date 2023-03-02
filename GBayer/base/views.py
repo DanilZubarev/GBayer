@@ -248,19 +248,15 @@ def client(request, client_id):
     else:
         return redirect('am_client', client_id=client_id)
 
-
+@login_required
 def have(request):
-    have_prod = Product.objects.filter(have=True).order_by('goods__brand')
-    sum_purchase_price = have_prod.aggregate(Sum('purchase_price'))['purchase_price__sum']
-    sum_shipping = have_prod.aggregate(Sum('goods__shipping'))['goods__shipping__sum']
-    sum_purchase_price = sum_purchase_price + sum_shipping
+    if request.user.username in position['CEO']:
+        have_prod = Product.objects.filter(have=True).order_by('goods__brand')
+    else:
+        have_prod = Product.objects.filter(have=True).order_by('goods__brand')
+        have_prod = have_prod.filter(employee__username=request.user.username)
 
-    # p = Product.objects.filter(client=174)
-    # k = Client.objects.get(pk=248)
-    # for i in p:
-    #     i.have = True
-    #     i.client = k
-    #     i.save()
+    sum_purchase_price = have_prod.aggregate(Sum('purchase_price'))['purchase_price__sum']
 
     context = {'title': 'Наличие', 'have': have_prod, 'sum_purchase_price': sum_purchase_price, 'total': len(have_prod),
                }

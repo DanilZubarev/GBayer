@@ -41,7 +41,6 @@
                 </div>
                 {% if user.username in ceo %}
                 <div class="col-md-6 mt-3">
-
                     <label class="form-label">Описание</label>
                         <span class="form-control border border-1 shadow border-dark">{{items.description}}</span>
                 </div>
@@ -56,7 +55,6 @@
                 </div>
                 {% else %}
                 <div class="col-md-9 mt-3">
-
                     <label class="form-label">Описание</label>
                         <span class="form-control border border-1 shadow border-dark">{{items.description}}</span>
                 </div>
@@ -88,8 +86,8 @@
                         </div>
                 </div>
                 <div class="col-md-3 mt-3">
-                    <label class="form-label">Продажа</label>
-                        <span class="form-control border border-1 shadow border-dark">{{items.selling_price}}</span>
+                    <label class="form-label">Продажа*</label>
+                        <input class="form-control border border-1 shadow border-dark" name="selling_price" value="{{items.selling_price}}">
                 </div>
                 <div class="col-md-3 mt-3">
                     <label class="form-label">Предоплата*</label>
@@ -190,10 +188,58 @@
                         <button type="button" class="btn btn-outline-dark shadow">Клиент</button>
                     </a>
                 </div>
-                <div class="col-4">
+                {% if items.have == True %}
+                <div class="col-2 offset-1 mt-3 text-end">
+                    <button type="button" class="btn btn-danger shadow btn-lg" data-bs-toggle="modal"
+                            data-bs-target="#sell">Продать
+                    </button>
+                    <div class="modal fade" id="sell" tabindex="-1"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered container-fluid modal-lg" style="width: 75%;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Продажа</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <form action="{% url 'product' product_id=items.pk %}" id="form_sale"
+                                            method="post">
+                                            {% csrf_token %}
+                                        <div class="row text-start">
+                                            <div class="col-6">
+                                                <label class="form-label">Клиент</label>
+                                                <input class="form-control border border-1 border-dark" name="client"
+                                                       list="listClient" placeholder="Введите для поиска...">
+                                                <datalist id="listClient">
+                                                    {% for c in client %}
+                                                    <option label="{{c.telephone}}" value={{c.pk}}></option>
+                                                    {% endfor %}
+                                                </datalist>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Цена продажи</label>
+                                                <input class="form-control border border-1 border-dark"
+                                                       name="selling_price">
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="modal-footer text-end">
+                                    <button type="submit" class="btn btn-outline-dark" form="form_sale">
+                                        Продать
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-3">
                     <br><hr>
                 </div>
-                <div class="col-2 mt-3 text-end">
+                {% endif %}
+                <div class="col-2 mt-3 offset-1 text-end">
                     <button type="button" onclick="history.back()" class="btn btn-outline-dark btn-lg shadow">Закрыть</button>
                 </div>
             </div>

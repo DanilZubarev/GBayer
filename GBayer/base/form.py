@@ -19,14 +19,15 @@ class NewProductForms(forms.ModelForm):
                 attrs={'class': 'form-control', 'placeholder': 'Описание товара: характеристика, цвет, размер и т.п.'}),
             'image': forms.FileInput(attrs={'class': 'form-control form-control'}),
             'client': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Введите для поиска...', 'list': 'listClient'}),
+                attrs={'class': 'form-control', 'id': 'client', 'placeholder': 'Введите для поиска...',
+                       'list': 'listClient'}),
             'shop': forms.Select(attrs={'class': 'form-select'}),
             'purchase_price': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Цена покупки в рублях', 'id': 'purchase_price'}),
             'selling_price': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Цена продажи'}),
+                attrs={'class': 'form-control', 'id': 'selling_price', 'placeholder': 'Цена продажи'}),
             'prepayment': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'Сумма предоплаты'}),
+                attrs={'class': 'form-control', 'id': 'prepayment', 'placeholder': 'Сумма предоплаты'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
         }

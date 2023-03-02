@@ -128,8 +128,15 @@ def sk(request):
         product.save()
         return redirect(request.META.get("HTTP_REFERER"))
 
-    shop_f = request.GET.get('shop')
-    brand_f = request.GET.get('brand')
+    if request.GET.get('shop'):
+        shop_f = request.GET.get('shop')
+    else:
+        shop_f = request.GET.get('shop_f')
+
+    if request.GET.get('brand'):
+        brand_f = request.GET.get('brand')
+    else:
+        brand_f = request.GET.get('brand_f')
 
     if request.GET.get('shop') or request.GET.get('brand'):
         if request.GET.get('shop'):
@@ -140,7 +147,7 @@ def sk(request):
                 filter_shop = get_object_or_404(Shop, title=request.GET.get('shop'))
                 products = products.filter(shop=filter_shop)
             except:
-                filter_shop = get_object_or_404(Shop, title=request.GET.get('shop'))
+                filter_shop = Shop.objects.get(title=request.GET.get('shop'))
                 products = products.filter(shop=filter_shop)
         else:
             try:
@@ -150,7 +157,7 @@ def sk(request):
                 filter_brand = get_object_or_404(Brand, title=request.GET.get('brand'))
                 goods = Goods.objects.filter(Q(product=None) & Q(brand=filter_brand))
             except:
-                filter_brand = get_object_or_404(Brand, title=request.GET.get('brand'))
+                filter_brand = Brand.objects.get(title=request.GET.get('brand'))
                 goods = Goods.objects.filter(Q(product=None) & Q(brand=filter_brand))
 
     context = {
@@ -213,7 +220,7 @@ def sk_batch(request):
 @login_required
 def sk_send(request):
     goods = Goods.objects.exclude(product=None)
-    goods = goods.exclude(product__status=6)
+    goods = goods.exclude(Q(product__status=6) | Q(product__have=True))
     text = ''
     if request.GET.keys():
         if 'shipment' in request.GET.keys():

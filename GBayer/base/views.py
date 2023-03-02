@@ -5,21 +5,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models import Sum
-
+from django.db.models import Sum, Count
 
 from .form import *
-from .models import *
 from .rate import rate
 from .position import *
+from dashbord.models import *
 
 
 @login_required
 def general(request):
-    items = Product.objects.all()
-    for i in items:
-        i.profit = i.selling_price - i.purchase_price
-        i.save()
     if request.user.username in position['CEO']:
 
         shop = Shop.objects.all()
@@ -71,7 +66,7 @@ def general(request):
 
             items = Product.objects.filter(**filter)
         else:
-            items = Product.objects.all()
+            items = Product.objects.exclude(status=6)
 
         items_wait = Product.objects.filter(status=1, employee__username__in=position['AM'])
 
@@ -109,6 +104,7 @@ def new_product(request):
     rate_now = Rate.objects.latest('id')
 
     if request.method == 'POST':
+        print(request.POST)
         if 'description' in request.POST.keys():
             form = NewProductForms(request.POST, request.FILES)
             form_client = NewClientForms()
@@ -118,6 +114,7 @@ def new_product(request):
                 it = form.save(commit=False)
                 it.employee = request.user
                 it.profit = it.selling_price - it.purchase_price
+                it.have = request.POST.get('have')
                 it.save()
                 return redirect('general')
         if 'name' in request.POST.keys():
@@ -183,26 +180,38 @@ def product(request, product_id):
     items = get_object_or_404(Product, pk=product_id)
     status = Status.objects.all()
     employee = User.objects.all()
+    client = Client.objects.all()
     rate_now = Rate.objects.latest('id')
     url = request.META.get("HTTP_REFERER")
     ceo = position['CEO']
 
     if request.method == 'POST':
-        items.status = Status.objects.get(title=request.POST.get('status'))
-        items.employee = User.objects.get(username=request.POST.get('employee'))
-        items.prepayment = int(request.POST.get('prepayment'))
-        items.purchase_price = int(request.POST.get('purchase_price'))
-        items.residue = items.selling_price - items.prepayment
-        items.profit = items.selling_price - items.purchase_price
-        items.save()
-        if request.path in request.META.get("HTTP_REFERER"):
-            url = request.POST.get('url')
+        if request.POST.get('client'):
+            items.client = Client.objects.get(pk=request.POST.get('client'))
+            items.prepayment = int(request.POST.get('selling_price'))
+            items.selling_price = int(request.POST.get('selling_price'))
+            items.residue = items.selling_price - items.prepayment
+            items.profit = items.selling_price - items.purchase_price
+            items.have = False
+            items.save()
+            return redirect('have')
         else:
-            url = request.META.get("HTTP_REFERER")
-        return redirect(url)
+            items.status = Status.objects.get(title=request.POST.get('status'))
+            items.employee = User.objects.get(username=request.POST.get('employee'))
+            items.prepayment = int(request.POST.get('prepayment'))
+            items.selling_price = int(request.POST.get('selling_price'))
+            items.purchase_price = int(request.POST.get('purchase_price'))
+            items.residue = items.selling_price - items.prepayment
+            items.profit = items.selling_price - items.purchase_price
+            items.save()
+            if request.path in request.META.get("HTTP_REFERER"):
+                url = request.POST.get('url')
+            else:
+                url = request.META.get("HTTP_REFERER")
+            return redirect(url)
 
     context = {'title': 'Товар', 'items': items, 'status': status, 'rate': rate_now,
-               'url': url, 'employee': employee, 'ceo': ceo}
+               'url': url, 'employee': employee, 'ceo': ceo, 'client': client}
 
     return render(request, 'base/product.html', context)
 
@@ -238,6 +247,24 @@ def client(request, client_id):
         return render(request, 'base/client.html', context)
     else:
         return redirect('am_client', client_id=client_id)
+
+
+def have(request):
+    have_prod = Product.objects.filter(have=True).order_by('goods__brand')
+    sum_purchase_price = have_prod.aggregate(Sum('purchase_price'))['purchase_price__sum']
+    sum_shipping = have_prod.aggregate(Sum('goods__shipping'))['goods__shipping__sum']
+    sum_purchase_price = sum_purchase_price + sum_shipping
+
+    # p = Product.objects.filter(client=174)
+    # k = Client.objects.get(pk=248)
+    # for i in p:
+    #     i.have = True
+    #     i.client = k
+    #     i.save()
+
+    context = {'title': 'Наличие', 'have': have_prod, 'sum_purchase_price': sum_purchase_price, 'total': len(have_prod),
+               }
+    return render(request, 'base/have.html', context)
 
 
 def start(request):

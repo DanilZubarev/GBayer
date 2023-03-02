@@ -42,7 +42,13 @@
             </select>
         </div>
         <div class="col-8">
-            <h4 class="md-3">Добавление нового заказа</h4><hr>
+            <div class="row">
+                <h4 class="col-9 md-3">Добавление нового заказа</h4>
+                <div class="col-2 form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="haveDefault">
+                    <label class="form-check-label" for="haveDefault"><h5>Наличие</h5></label>
+                </div><hr>
+            </div>
             <div class="border border-dark rounded-2 p-3 shadow">
                 <form class="row g-2 ustify-content-center" action="{% url 'new_product' %}" id="form_new_prod"
                       method="post" enctype="multipart/form-data">
@@ -74,6 +80,7 @@
                             {% endfor %}
                         </datalist>
                     </div>
+                    <input type="hidden" id="default_client" value="248">
                     <div class="col-md-6 offset-1">
                         <label class="form-label">Магазин</label>
                         {{form.shop}}
@@ -90,19 +97,19 @@
                                         <label class="btn border-start" for="usd">$</label>
                                 </div>
                                 <script>
-                            function func(op) {
-                                var purchase_price;
-                                var eur = parseFloat(document.getElementById("eur").value.replace(',', '.'));
-                                var usd = parseFloat(document.getElementById("usd").value.replace(',', '.'));
-                                var price_currency = Number(document.getElementById("price_currency").value);
-                                if (op < 2){
-                                    purchase_price = price_currency * eur;
-                                } else {
-                                    purchase_price = price_currency * usd;
-                                }
-                                document.getElementById("purchase_price").value = purchase_price.toFixed(0);
-                                }
-                        </script>
+                                    function func(op) {
+                                        var purchase_price;
+                                        var eur = parseFloat(document.getElementById("eur").value.replace(',', '.'));
+                                        var usd = parseFloat(document.getElementById("usd").value.replace(',', '.'));
+                                        var price_currency = Number(document.getElementById("price_currency").value);
+                                        if (op < 2){
+                                            purchase_price = price_currency * eur;
+                                        } else {
+                                            purchase_price = price_currency * usd;
+                                        }
+                                        document.getElementById("purchase_price").value = purchase_price.toFixed(0);
+                                        }
+                                </script>
                             </div>
                         </div>
                     </div>
@@ -111,24 +118,55 @@
                         <input class="form-control" name="purchase_price"
                                placeholder="Цена в рублях" id="purchase_price">
                         <div style="color: red;">{{ form.purchase_price.errors}}</div>
-
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Цена продажи</label>
                         {{form.selling_price}}
                         <div style="color: red;">{{ form.selling_price.errors}}</div>
                     </div>
+                    <input type="hidden" id="default_selling_price" value="0">
                     <div class="col-md-3">
-                        <label class="form-label">Сумма предоплаты</label>
-                        {{form.prepayment}}
-                        <div class="form-error" style="color: red;">{{form.prepayment.errors}}</div>
-                    </div>
+                    <label class="form-label">Сумма предоплаты</label>
+                    {{form.prepayment}}
+                    <div class="form-error" style="color: red;">{{form.prepayment.errors}}</div>
+                </div>
+                    <input type="hidden" id="default_prepayment" value="0">
+                    <input type="hidden" id="have" name="have" value=False>
                     <p></p>
                 </form>
             </div>
             <hr>
         </div>
     </div>
+    <script>
+      const checkbox = document.getElementById('haveDefault');
+      const field1 = document.getElementById('client');
+      const field2 = document.getElementById('selling_price');
+      const field3 = document.getElementById('prepayment');
+      const field4 = document.getElementById('have');
+      const default_field1 = document.getElementById('default_client');
+      const default_field2 = document.getElementById('default_selling_price');
+      const default_field3 = document.getElementById('default_prepayment');
+
+      checkbox.addEventListener('change', function() {
+        if (this.checked) {
+          field1.disabled = true;
+          field2.disabled = true;
+          field3.disabled = true;
+          default_field1.name = "client";
+          default_field2.name = "selling_price";
+          default_field3.name = "prepayment";
+          field4.value = "True";
+        } else {
+          default_field1.disabled = true;
+          default_field2.disabled = true;
+          default_field3.disabled = true;
+          field1.disabled = false;
+          field2.disabled = false;
+          field3.disabled = false;
+        }
+      });
+    </script>
     <div class="row my-2 justify-content-center">
         <div class="col-2 offset-5 text-end">
             <a href = "{% url 'general' %}">

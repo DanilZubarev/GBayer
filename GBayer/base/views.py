@@ -256,9 +256,11 @@ def have(request):
         have_prod = Product.objects.filter(have=True).order_by('goods__brand')
         have_prod = have_prod.filter(employee__username=request.user.username)
 
+    ceo = position['CEO']
     sum_purchase_price = have_prod.aggregate(Sum('purchase_price'))['purchase_price__sum']
 
     context = {'title': 'Наличие', 'have': have_prod, 'sum_purchase_price': sum_purchase_price, 'total': len(have_prod),
+               'ceo': ceo,
                }
     return render(request, 'base/have.html', context)
 

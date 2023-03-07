@@ -255,6 +255,8 @@ def sk_send(request):
 def sk_ceo(request):
     batchs = Batch.objects.filter(shipping=None)
     goods_batch = Goods.objects.all()
+    no_prod = goods_batch.filter(product=None)
+    duty = goods_batch.filter(Q(product__status__pk=6) & Q(product__residue__gt=0))
 
     if request.method == 'POST':
         batch = Batch.objects.get(pk=request.POST.get('pk'))
@@ -270,6 +272,6 @@ def sk_ceo(request):
         batch.save()
 
     context = {
-        'title': 'Cклад', 'batchs': batchs, 'goods_batch': goods_batch
+        'title': 'Cклад', 'batchs': batchs, 'goods_batch': goods_batch, 'no_prod': no_prod, 'duty': duty
     }
     return render(request, 'dashbord/sk_ceo.html', context)

@@ -4,8 +4,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2">
-            <div class="row">
-                <div class="col-md-2 mb-2 p-0 position-relative">
+            <div class="row md-auto">
+                <div class="col-md-12 col-lg-2 mb-2 p-0 position-relative">
                     <button type="button" class="btn btn-outline-dark shadow-sm" data-bs-toggle="modal" data-bs-target="#Fair">
                         {% if items_wait.count > 0 %}
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -78,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2 mx-2">
+                <div class="col-md-12 col-lg-2 mx-2">
                     <a href="{% url 'sk_ceo' %}">
                         <button class="btn btn-outline-dark shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" width="23" height="25" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
@@ -87,7 +87,7 @@
                         </button>
                     </a>
                 </div>
-                <div class="col-md-2 mx-2">
+                <div class="col-md-12 col-lg-2 mx-2">
                     <a href="{% url 'have' %}">
                         <button class="btn btn-outline-dark shadow-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-shop-window" viewBox="0 0 16 16">
@@ -96,14 +96,14 @@
                         </button>
                     </a>
                 </div>
-                <div class="col-md-2 mx-2">
+                <div class="col-md-12 col-lg-2 mx-2">
                     <button class="btn btn-outline-dark shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z"/>
                         </svg>
                     </button>
                 </div>
-                <div class="col-md-11 pt-3 border border-dark rounded-2 shadow">
+                <div class="col-lg-11 pt-3 border border-dark rounded-2 shadow">
                     <button type="button" class="btn btn-outline-dark shadow-sm mx-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     <h4>Фильтры</h4>
                     </button>
@@ -211,7 +211,7 @@
                     </tr>
                 </thead>
             </table>
-            <div class="overflow-scroll" style="height: 530px;">
+            <div class="overflow-scroll" style="height: 65vh;">
                 <table class="table table-striped table-hover bg-white rounded-2 shadow">
                     <form class="" action="{% url 'general' %}" id="form_checkbox"
                       method="get" enctype="multipart/form-data">
@@ -221,7 +221,7 @@
                             <td width="5%">
                                 <input class="form-check-input" type="checkbox" name={{i.pk}} id="checkbox">
                             </td>
-                            <td width="32%"> <a href = "{{i.get_absolute_url}}" class="link-dark"> {{i.description}}</a></td>
+                            <td width="32%"><a href = "{{i.get_absolute_url}}" class="link-dark"> {{i.description}}</a></td>
                             <!--{% if i.image %}
                             <td width="5%"><img src="{{i.image.url}}" height="50"></td>
                             {% endif %}-->

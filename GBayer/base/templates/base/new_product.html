@@ -3,9 +3,10 @@
 
 <div class="conteiner" xmlns="http://www.w3.org/1999/html">
     <div class="row">
-        <div class="col-2 mt-5">
-            <button type="button" class="shadow btn btn-outline-dark btn-lg mt-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                Добавить<hr>нового клиента<br>или<br> новый магазин
+        <div class="col-md-12 col-lg-2 mt-5">
+            <button type="button" class="shadow btn btn-outline-dark btn-lg mb-2" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                Добавить<hr class="d-none d-lg-block">нового клиента<br class="d-none d-lg-block">или<br class="d-none d-lg-block"> новый магазин
             </button></a>
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
               <div class="offcanvas-header">
@@ -34,14 +35,14 @@
                 </div>
               </div>
             </div>
-            <label class="form-label pt-3">Справочник клиентов</label>
-            <select class="form-select border border-dark rounded-2 shadow">
+            <label class="col-md-12 col-lg-12 form-label pt-3">Справочник клиентов</label>
+            <select class="form-select border border-dark rounded-2 mb-2 shadow">
                 {% for c in client %}
                 <option>{{c.pk}} - {{c.telephone}}</option>
                 {% endfor %}
             </select>
         </div>
-        <div class="col-8">
+        <div class="col-md-12 col-lg-8">
             <div class="row">
                 <h4 class="col-9 md-3">Добавление нового заказа</h4>
                 <div class="col-2 form-check form-switch">
@@ -53,24 +54,24 @@
                 <form class="row g-2 ustify-content-center" action="{% url 'new_product' %}" id="form_new_prod"
                       method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="col-md-12">
+                    <div class="col-md-12 col-lg-12">
                         <label class="form-label">Описание</label>
                         {{form.description}}
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4 col-lg-5">
                         <label class="form-label">Фото</label>
                         {{form.image}}
                         <div style="color: red;">{{ form.image.errors}}</div>
                     </div>
-                    <div class="col-md-3 offset-1">
+                    <div class="col-md-4 col-lg-3 offset-lg-1">
                         <label class="form-label">Категория</label>
                         {{form.category}}
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4 col-lg-3">
                         <label class="form-label">Статус</label>
                         {{form.status}}
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-12 col-lg-5">
                         <label class="form-label">Клиент</label>
                         {{form.client}}
                         <div style="color: red;">{{ form.client.errors}}</div>
@@ -81,11 +82,11 @@
                         </datalist>
                     </div>
                     <input type="hidden" id="default_client" value="248">
-                    <div class="col-md-6 offset-1">
+                    <div class="col-md-6 col-lg-6 offset-lg-1">
                         <label class="form-label">Магазин</label>
                         {{form.shop}}
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6 col-lg-3">
                         <div class="row">
                         <label class="form-label">Цена покупки в валюте</label>
                             <div class="input-group">
@@ -113,19 +114,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6 col-lg-3">
                         <label class="form-label">Цена покупки в рублях</label>
                         <input class="form-control" name="purchase_price"
                                placeholder="Цена в рублях" id="purchase_price">
                         <div style="color: red;">{{ form.purchase_price.errors}}</div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6 col-lg-3">
                         <label class="form-label">Цена продажи</label>
                         {{form.selling_price}}
                         <div style="color: red;">{{ form.selling_price.errors}}</div>
                     </div>
                     <input type="hidden" id="default_selling_price" value="0">
-                    <div class="col-md-3">
+                    <div class="col-md-6 col-lg-3">
                         <label class="form-label">Сумма предоплаты</label>
                         {{form.prepayment}}
                         <div class="form-error" style="color: red;">{{form.prepayment.errors}}</div>

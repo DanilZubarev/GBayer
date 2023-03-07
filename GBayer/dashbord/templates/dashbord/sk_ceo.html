@@ -3,101 +3,200 @@
 {% block content %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-3 mt-3">
-            <button class="shadow btn btn-outline-dark position-relative" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#batchs" aria-expanded="false" aria-controls="batchs">
-                    {% if batchs.count > 0 %}
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{batchs.count}}
-                    </span>
-                    {% endif %}
-                Оплата доставки
-            </button>
-        </div>
-        <div class="collapse" id="batchs">
-            <div class="card col-6 card-body my-3 p-4 bg-light text-dark">
-                <div class="row">
-                    <div class="col-1">
-                        <label class="form-label">№</label>
-                    </div>
-                    <div class="col-3">
-                        <label class="form-label">Содержимое</label>
-                    </div>
-                    <div class="col-2">
-                        <label class="form-label">Вес</label>
-                    </div>
-                    <div class="col-4">
-                        <label class="form-label">Стоимость доставки</label>
-                    </div>
-                    <hr>
-                    {% for b in batchs %}
-                    <form class="row" action="{% url 'sk_ceo' %}" method="post">
-                        {% csrf_token %}
+        <div class="col-6">
+            <div class="text-center h5">Внесите стоимость доставки:</div>
+            <div class="col-md-12 overflow-scroll" style="height: 285px;">
+                <div class="p-2 bg-light text-dark">
+                    <div class="row">
                         <div class="col-1">
-                            <label class="form-label">{{b.pk}}</label>
+                            <label class="form-label">№</label>
                         </div>
                         <div class="col-3">
-                            <a class="link-dark" data-bs-toggle="collapse" href="#collaps_include{{b.pk}}"
-                               aria-expanded="false" aria-controls="collaps_include{{b.pk}}">
-                                Содержимое
-                            </a>
+                            <label class="form-label">Содержимое</label>
                         </div>
                         <div class="col-2">
-                            <label class="form-label">{{b.weight|floatformat:2}} кг.</label>
+                            <label class="form-label">Вес</label>
                         </div>
                         <div class="col-4">
-                            <label class="form-label">
-                                <input class="form-control-sm border border-1 border-dark" name="shipping">
-                            </label>
+                            <label class="form-label">Стоимость доставки</label>
                         </div>
-                        <div class="col-1">
-                            <button type="submit" class="btn btn-outline-secondary btn-sm" name="pk" value="{{b.pk}}">
-                                Внести
-                            </button>
+                        <hr>
+                        {% for b in batchs %}
+                        <form class="row" action="{% url 'sk_ceo' %}" method="post">
+                            {% csrf_token %}
+                            <div class="col-1">
+                                <label class="form-label">{{b.pk}}</label>
+                            </div>
+                            <div class="col-3">
+                                <a class="link-dark" data-bs-toggle="collapse" href="#collaps_include{{b.pk}}"
+                                   aria-expanded="false" aria-controls="collaps_include{{b.pk}}">
+                                    Содержимое
+                                </a>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label">{{b.weight|floatformat:2}} кг.</label>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">
+                                    <input class="form-control-sm border border-1 border-dark" name="shipping">
+                                </label>
+                            </div>
+                            <div class="col-1">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm" name="pk" value="{{b.pk}}">
+                                    Внести
+                                </button>
+                            </div>
+                            <div class="collapse" id="collaps_include{{b.pk}}">
+                                <div class="card card-body overflow-scroll text-center" style="height: 300px;">
+                                    <div class="row">
+                                        <div class="col-1">
+                                            <label class="form-label">№</label>
+                                        </div>
+                                        <div class="col-7">
+                                            <label class="form-label">Описание</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label">Бренд</label>
+                                        </div>
+                                        <div class="col-1">
+                                            <label class="form-label">Вес</label>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                    {% for g in goods_batch %}
+                                        {% if g.batch == b %}
+                                    <div class="row">
+                                        <div class="col-1">
+                                            <label class="form-label">{{g.pk}}</label>
+                                        </div>
+                                        <div class="col-7">
+                                            <label class="form-label">{{g.description}}</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label">{{g.brand}}</label>
+                                        </div>
+                                        <div class="col-1">
+                                            <label class="p-1 form-label">{{g.weight|floatformat:2}}</label>
+                                        </div>
+                                    </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </form>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="col-3 mt-2">
+                <a href = "{% url 'new_product' %}" class="link-dark">
+                    Отправленные
+                </a>
+            </div>
+            <div class="col-3 mt-2">
+                <a href = "{% url 'new_product' %}" class="link-dark">
+                    Ждут отправки
+                </a>
+            </div>
+            <div class="col-3 mt-2">
+                <a href = "{% url 'new_product' %}" class="link-dark">
+                    Ждут накладные
+                </a>
+            </div>
+            <div class="col-3 mt-2">
+                <a href = "{% url 'new_product' %}" class="link-dark">
+                    Полуенные партии
+                </a>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="col-md-12">
+                <div class="text-center h5">Отправленны с долгом: {{duty|length}}</div>
+                <div class="container-fluid shadow border border-dark rounded-2">
+                    <div class="row shadow text-center overflow-scroll" style="height: 300px;">
+                        <div class="col-2">
+                            <label class="form-label"><strong>Отправка</strong></label>
                         </div>
-                        <div class="collapse" id="collaps_include{{b.pk}}">
-                            <div class="card card-body overflow-scroll text-center" style="height: 300px;">
-                                <div class="row">
-                                    <div class="col-1">
-                                        <label class="form-label">№</label>
-                                    </div>
-                                    <div class="col-7">
-                                        <label class="form-label">Описание</label>
-                                    </div>
-                                    <div class="col-3">
-                                        <label class="form-label">Бренд</label>
-                                    </div>
-                                    <div class="col-1">
-                                        <label class="form-label">Вес</label>
-                                    </div>
-                                    <hr>
-                                </div>
-                                {% for g in goods_batch %}
-                                    {% if g.batch == b %}
-                                <div class="row">
-                                    <div class="col-1">
-                                        <label class="form-label">{{g.pk}}</label>
-                                    </div>
-                                    <div class="col-7">
-                                        <label class="form-label">{{g.description}}</label>
-                                    </div>
-                                    <div class="col-3">
-                                        <label class="form-label">{{g.brand}}</label>
-                                    </div>
-                                    <div class="col-1">
-                                        <label class="p-1 form-label">{{g.weight|floatformat:2}}</label>
-                                    </div>
-                                </div>
-                                    {% endif %}
-                                {% endfor %}
+                        <div class="col-6">
+                            <label class="form-label"><strong>Описание</strong></label>
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label"><strong>Клиент</strong></label>
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label"><strong>Остаток</strong></label>
+                        </div>
+                        <hr>
+                        {% for i in duty %}
+                        <div class="col-2">
+                            <label class="form-label">{{i.product.time_update|date:"d/m/y"}}</label>
+                        </div>
+                        <div class="col-6">
+                            <a href = "{{i.product.get_absolute_url}}" class="link-dark">{{i.product.description}}</a>
+                        </div>
+                        <div class="col-2">
+                            <a href = "{{i.product.client.get_absolute_url}}" class="link-dark">{{i.product.client}}</a>
+                        </div>
+                        <div class="col-2">
+                            <label class="form-label">{{i.product.residue}}</label>
+                        </div>
+                        <hr>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 mt-3">
+            <div class="text-center h5">
+                <a href = "{% url 'sk' %}" class="link-dark">Неопознанные товары на складе: {{no_prod|length}}</a>
+            </div>
+            <div class="container-fluid shadow border border-dark rounded-2">
+                <div class="row shadow text-center overflow-scroll" style="height: 280px;">
+                    <div class="col-2">
+                        <label class="form-label"><strong>Принят</strong></label>
+                    </div>
+                    <div class="col-1">
+                        <label class="form-label"><strong>№</strong></label>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label"><strong>Описание</strong></label>
+                    </div>
+                    <div class="col-2">
+                        <label class="form-label"><strong>Фото</strong></label>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label"><strong>Бренд</strong></label>
+                    </div>
+                    <hr>
+                    {% for i in no_prod %}
+                    <div class="col-2">
+                        <label class="form-label">{{i.time_create|date:"d/m/y"}}</label>
+                    </div>
+                    <div class="col-1">
+                        <label class="form-label">{{i.pk}}</label>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label">{{i.description}}</label>
+                    </div>
+                    <div class="col-2 mb-1">
+                        <a href="#" class="image-link" data-bs-toggle="modal" data-bs-target="#goods_img{{ i.pk }}">
+                            <img src="{{ i.image.url }}" height="50">
+                        </a>
+                        <div class="modal fade" id="goods_img{{ i.pk }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered container-fluid">
+                                <img src="{{ i.image.url }}" height="700">
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label">{{i.brand}}</label>
+                    </div>
+                    <hr>
                     {% endfor %}
                 </div>
             </div>
         </div>
-
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-6">
             <div class="text-center h5">Внесите стоимость доставки:</div>
-            <div class="col-md-12 overflow-scroll" style="height: 285px;">
+            <div class="col-lg-12 overflow-scroll" style="height: 285px;">
                 <div class="p-2 bg-light text-dark">
                     <div class="row">
                         <div class="col-1">
@@ -89,25 +89,48 @@
                 </div>
             </div>
             <hr>
-            <div class="col-3 mt-2">
-                <a href = "{% url 'new_product' %}" class="link-dark">
-                    Отправленные
-                </a>
-            </div>
-            <div class="col-3 mt-2">
-                <a href = "{% url 'new_product' %}" class="link-dark">
-                    Ждут отправки
-                </a>
-            </div>
-            <div class="col-3 mt-2">
-                <a href = "{% url 'new_product' %}" class="link-dark">
-                    Ждут накладные
-                </a>
-            </div>
-            <div class="col-3 mt-2">
-                <a href = "{% url 'new_product' %}" class="link-dark">
-                    Полуенные партии
-                </a>
+            <div class="text-center h5">За последние 10 дней отправленно: {{sends|length}}</div>
+            <div class="container-fluid shadow border border-dark rounded-2">
+                <div class="row shadow text-center overflow-scroll" style="height: 280px;">
+                    <div class="p-2 bg-light text-dark">
+                        <div class="row">
+                            <div class="col-2">
+                                <label class="form-label">Дата</label>
+                            </div>
+                            <div class="col-5">
+                                <label class="form-label">Описание</label>
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label">Фото</label>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label">Клиент</label>
+                            </div>
+                            <hr>
+                            {% for g in sends %}
+                            <div class="col-2">
+                                <label class="form-label">{{g.product.time_update|date:'d/m/y'}}</label>
+                            </div>
+                            <div class="col-5">
+                                <a href = "{{g.product.get_absolute_url}}" class="link-dark"> {{g.product.description}}</a>
+                            </div>
+                            <div class="col-2">
+                                <a href="#" class="image-link" data-bs-toggle="modal" data-bs-target="#goods_img{{ g.product.pk }}">
+                                    <img src="{{ g.product.image.url }}" height="50">
+                                </a>
+                                <div class="modal fade" id="goods_img{{ g.product.pk }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered container-fluid">
+                                        <img src="{{ g.product.image.url }}" height="700">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label">{{g.product.client}}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-6">

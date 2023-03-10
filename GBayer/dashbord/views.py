@@ -226,7 +226,8 @@ def sk_send(request):
         if 'shipment' in request.GET.keys():
             goods = goods.filter(product__status=5)
             text = f'Всего позиций к отправке {len(goods)} общий вес: ' \
-                   f'{round(goods.aggregate(Sum("weight"))["weight__sum"],2)} кг.'
+                   f'{round(goods.aggregate(Sum("weight"))["weight__sum"],2)} кг.'\
+                   f' С общим остатоком {goods.aggregate(Sum("product__residue"))["product__residue__sum"]} рублей.'
         if 'invoice' in request.GET.keys():
             goods = goods.filter(product__status=4).order_by("product__client")
             text = f'Необходимо создать накладные по {len(goods)} позициям для ' \
@@ -254,9 +255,15 @@ def sk_send(request):
 @login_required
 def sk_ceo(request):
     batchs = Batch.objects.filter(shipping=None)
-    goods_batch = Goods.objects.all()
+    goods_batch = Goods.objects.all().order_by('-product__time_update')
     no_prod = goods_batch.filter(product=None)
     duty = goods_batch.filter(Q(product__status__pk=6) & Q(product__residue__gt=0))
+    days_ago = datetime.now() - timedelta(days=10)
+    sends = goods_batch.filter(Q(product__status__pk=6) & Q(product__time_update__date__gte=days_ago.date()))
+
+    for i in goods_batch.filter(batch=27):
+        i.shipping = i.weight * 1600
+        i.save()
 
     if request.method == 'POST':
         batch = Batch.objects.get(pk=request.POST.get('pk'))
@@ -272,6 +279,7 @@ def sk_ceo(request):
         batch.save()
 
     context = {
-        'title': 'Cклад', 'batchs': batchs, 'goods_batch': goods_batch, 'no_prod': no_prod, 'duty': duty
+        'title': 'Cклад', 'batchs': batchs, 'goods_batch': goods_batch, 'no_prod': no_prod, 'duty': duty,
+        'sends': sends,
     }
     return render(request, 'dashbord/sk_ceo.html', context)
